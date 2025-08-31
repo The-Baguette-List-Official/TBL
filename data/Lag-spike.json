@@ -1,1 +1,24 @@
-
+{
+    "id": 57436521,
+    "name": "Lag Spike",
+    "author": "kitemy",
+    "creators": ["kitemy"],
+    "verifier": "kitemy",
+    "verification": "https://youtu.be/RouRYlfvxKk",
+    "percentToQualify": "100",
+    "password": "Free To Copy",
+    "records": [
+        {
+            "user": "Ghouno",
+            "link": "https://youtu.be/8WzvXXS74h4",
+            "percent": 100,
+            "hz": 240
+        },
+        {
+            "user": "Seth",
+            "link": "https://www.youtube.com/watch?v=kyWCAVaAPeE",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}
