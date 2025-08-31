@@ -1,18 +1,18 @@
 [
     {
         "role": "owner",
-        "name": "List Owner",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "Ghouno",
+        "link": "https://www.youtube.com/@Ghouno"
     },
     {
         "role": "admin",
-        "name": "List Admin",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "Zek0o",
+        "link": "https://www.youtube.com/@Zek0oGD"
     },
     {
         "role": "helper",
-        "name": "List Helper",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "Zek0o",
+        "link": "https://www.youtube.com/@Zek0oGD"
     },
     {
         "role": "trial",
@@ -21,7 +21,12 @@
     },
     {
         "role": "dev",
-        "name": "List Coder",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "Zek0o",
+        "link": "https://www.youtube.com/@Zek0oGD"
+    },
+    {
+        "role": "dev",
+        "name": "Seth",
+        "link": "https://www.youtube.com/@Seth_levrai"
     }
 ]
