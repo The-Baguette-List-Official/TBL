@@ -1,1 +1,18 @@
-
+{
+    "id": 125285086,
+    "name": "My spike is laggy",
+    "author": "Ghouno",
+    "creators": ["Ghouno"],
+    "verifier": "Ghouno",
+    "verification": " https://youtu.be/PGJR2Q1oVtg?si=CIqQeh-MuJAlnttO",
+    "percentToQualify": 100,
+    "password": "Free to Copy",
+    "records": [
+        {
+            "user": "feisaran",
+            "link": "https://www.youtube.com/watch?v=oPNI-YUdElU",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}
