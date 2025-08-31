@@ -9,8 +9,20 @@
     "password": "Free To Copy",
     "records": [
         {
+            "user": "Senko",
+            "link": "https://www.youtube.com/watch?v=wBvQ2MwON9s",
+            "percent": 100,
+            "hz": 240
+        },
+        {
             "user": "feisaran",
             "link": "https://www.youtube.com/watch?v=C76JGNOpsMQ",
+            "percent": 100,
+            "hz": 240
+        },
+        {
+            "user": "Lizz_",
+            "link": "https://youtu.be/BOfRsYqZs9I?feature=shared",
             "percent": 100,
             "hz": 240
         }
