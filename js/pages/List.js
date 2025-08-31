@@ -121,9 +121,6 @@ export default {
                         Lorsqu’un niveau tombe dans la Legacy List, nous n'acceptons plus de records
                     </p>
                     <p>
-                        Veuillez préciser le taux de rafraichissement de votre écran
-                    </p>
-                    <p>
                         toutes submission enfreignant au moins une de ces règles se verra invalidée
                     </p>
                 </div>
