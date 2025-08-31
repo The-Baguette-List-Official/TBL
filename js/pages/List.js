@@ -98,30 +98,36 @@ export default {
                             </li>
                         </ol>
                     </template>
-                    <h3>Submission Requirements</h3>
+                    <h3>Conditions de soumission</h3>
                     <p>
-                        Achieved the record without using hacks (however, FPS bypass is allowed, up to 360fps)
+                        Avoir réalisé le record sans utiliser de hacks (l’FPS bypass et CBF est autorisé, jusqu’à 360 fps). Précisez si vous utilisez CBF
                     </p>
                     <p>
-                        Achieved the record on the level that is listed on the site - please check the level ID before you submit a record
+                        Avoir fini le niveau listé sur le site – vérifiez bien l’ID du niveau avant de soumettre un record.
                     </p>
                     <p>
-                        Have either source audio or clicks/taps in the video. Edited audio only does not count
+                        La vidéo doit comporter soit l’audio du jeu, soit les clics/taps. L’audio modifié seul ne compte pas (l'utilisation du mod click sound est strictement interdite).
                     </p>
                     <p>
-                        The recording must have a previous attempt and entire death animation shown before the completion, unless the completion is on the first attempt. Everyplay records are exempt from this
+                        L’enregistrement doit montrer une tentative précédente et l’animation complète de mort avant la complétion, sauf si la complétion est faite au premier essai. Les enregistrements Everyplay sont exemptés de cette règle.
                     </p>
                     <p>
-                        The recording must also show the player hit the endwall, or the completion will be invalidated.
+                        La vidéo doit aussi montrer l'écran de fin du niveau, sinon la complétion sera invalidée.
                     </p>
                     <p>
-                        Do not use secret routes or bug routes
+                        Ne pas utiliser de routes secrètes ou de routes bug.
                     </p>
                     <p>
-                        Do not use easy modes, only a record of the unmodified level qualifies
+                        Ne pas utiliser de versions faciles : seul un record sur le niveau non modifié est accepté.
                     </p>
                     <p>
-                        Once a level falls onto the Legacy List, we accept records for it for 24 hours after it falls off, then afterwards we never accept records for said level
+                        Lorsqu’un niveau tombe dans la Legacy List, nous n'acceptons plus de records
+                    </p>
+                    <p>
+                        Veuillez préciser le taux de rafraichissement de votre écran
+                    </p>
+                    <p>
+                        toutes submission enfreignant au moins une de ces règles se verra invalidée
                     </p>
                 </div>
             </div>
