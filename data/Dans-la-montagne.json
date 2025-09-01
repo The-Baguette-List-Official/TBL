@@ -40,12 +40,17 @@
         },
         {
             "user": "kitemy",
-            "link": "https://youtu.be/Ecm-nwTSOj8",
+            "link": "https://youtu.be/Ecm-nwTSOj8", 
             "percent": 100
         },
         {
             "user": "Darkad",
             "link": "https://www.youtube.com/watch?v=vfRnFfaeS6c",
+            "percent": 100
+        },
+        {
+            "user": "istBlitz",
+            "link": "https://youtu.be/HLQb9cXFCvk",
             "percent": 100
         }
     ]
