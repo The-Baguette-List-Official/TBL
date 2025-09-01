@@ -8,5 +8,10 @@
     "percentToQualify": "100",
     "password": "Free To Copy",
     "records": [
+         {
+            "user": "Darkad",
+            "link": "https://www.youtube.com/watch?v=r1F9clOpBwQ",
+            "percent": 100
+        }
     ]
 }
