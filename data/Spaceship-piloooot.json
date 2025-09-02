@@ -8,5 +8,15 @@
     "percentToQualify": "100",
     "password": "Free To Copy",
     "records": [
+        {
+            "user": "itsBlitz",
+            "link": "https://youtu.be/_nXfpPOwJHI",
+            "percent": 100
+        },
+        {
+            "user": "feisaran",
+            "link": "https://www.youtube.com/watch?v=Ooc2XKRHnFA",
+            "percent": 100
+        }
     ]
 }
