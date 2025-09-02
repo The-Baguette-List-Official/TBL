@@ -1,0 +1,18 @@
+{
+    "id": 125508844,
+    "name": "ca clique quasi vite",
+    "author": "kitemy",
+    "creators": ["kitemy"],
+    "verifier": "kitemy",
+    "verification": "https://www.youtu.be/s7PHmChLe7k",
+    "percentToQualify": 100,
+    "password": "Free To Copy",
+    "records": [
+        {
+            "user": "feisaran",
+            "link": "https://www.youtube.com/watch?v=twKQp3NKXzY",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}
