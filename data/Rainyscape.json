@@ -9,9 +9,9 @@
     "password": "Free To Copy",
     "records": [
         {
-        "user": "mstr",
-        "link": "https://www.youtube.com/watch?v=_4-8gZ_lBoI",
-        "percent": 100
+            "user": "mstr",
+            "link": "https://www.youtube.com/watch?v=_4-8gZ_lBoI",
+            "percent": 100
         }
     ]
 }
