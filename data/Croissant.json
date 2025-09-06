@@ -9,5 +9,11 @@
     "verification": "https://youtu.be/ypn93auT4RM",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+            "user": "kitemy",
+            "link": "https://youtu.be/TFbkpmqbyYk",
+            "percent": 100
+        }
+    ]
 }
