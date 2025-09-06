@@ -7,10 +7,11 @@
     "verification": "https://youtu.be/InykbNL25CI",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
-    {
-    "user": "mstr",
-    "link": "https://www.youtube.com/watch?v=_4-8gZ_lBoI",
-    "percent": 100
-    }
+    "records": [
+        {
+        "user": "mstr",
+        "link": "https://www.youtube.com/watch?v=_4-8gZ_lBoI",
+        "percent": 100
+        }
+    ]
 }
