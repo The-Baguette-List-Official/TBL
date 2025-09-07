@@ -9,5 +9,11 @@
     "verification": "https://youtu.be/w5KJ8BzF9oI?si=2Ga490SsdBTxfRbM",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+            "user": "feisaran",
+            "link": "https://www.youtube.com/watch?v=aWB8WqT_7CY",
+            "percent": 100
+        }
+    ]
 }
