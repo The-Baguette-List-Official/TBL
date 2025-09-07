@@ -11,18 +11,23 @@
     "password": "Free To Copy",
     "records": [
         {
-            "user": "ioi890",
-            "link": "https://youtu.be/Tk_zpM0SbSU",
-            "percent": 100
-        },
-        {
             "user": "Loxo",
             "link": "https://youtu.be/mqCe2RReXME",
             "percent": 100
         },
         {
+            "user": "ioi890",
+            "link": "https://youtu.be/Tk_zpM0SbSU",
+            "percent": 100
+        },
+        {
             "user": "mstr",
             "link": "https://www.youtube.com/watch?v=Dn_Ww0B14hk",
+            "percent": 100
+        },
+        {
+            "user": "kitemy",
+            "link": "https://youtu.be/Dgxgad44x8o",
             "percent": 100
         }
     ]
