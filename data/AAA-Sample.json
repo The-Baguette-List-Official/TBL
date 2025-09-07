@@ -1,0 +1,17 @@
+{
+    "id": 57436521,
+    "name": "SampleLevel1",
+    "author": "LevelUploader",
+    "creator(s)": ["Creator"],
+    "verifier": "Verifier",
+    "verification": "https://www.youtube.com/watch?v=",
+    "percentToQualify": 100,
+    "password": "Free To Copy",
+    "records": [
+        {
+            "user": "Sample_Victor_1",
+            "link": "https://www.youtube.com/watch?v=",
+            "percent": 100
+        }
+    ]
+}
