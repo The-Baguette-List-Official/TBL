@@ -9,5 +9,16 @@
     "verification": "https://youtu.be/bkJYD8RWri4?si=egMuyIw7P_VSKrIj",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+            "user": "Loxo",
+            "link": "https://youtu.be/dpsH9WC6XCE",
+            "percent": 100
+        },
+        {
+            "user": "Darkad",
+            "link": "https://www.youtube.com/watch?v=EM14vuFZ4BY",
+            "percent": 100
+        }
+    ]
 }
