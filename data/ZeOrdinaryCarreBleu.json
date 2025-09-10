@@ -7,5 +7,11 @@
     "verification": "https://youtu.be/_atBGBJ7O0Q",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+        "pseudo" : "Loxo"
+        -url : "https://youtu.be/N9Bces7xRFs"
+        -percent : 100
+        }
+    ]
 }
