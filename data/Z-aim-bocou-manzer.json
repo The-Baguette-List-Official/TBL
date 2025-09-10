@@ -9,8 +9,18 @@
     "password": "Free To Copy",
     "records": [
         {
-            "user": "Ghounoé",
+            "user": "Ghouno",
             "link": "https://youtu.be/wxXWHCJ756Y",
+            "percent": 100
+        },
+        {
+            "user": "Loxo",
+            "link": "https://youtu.be/ps6lw7aTqGg",
+            "percent": 100
+        },
+        {
+            "user": "MedineOnGD",
+            "link": "https://youtube.com/shorts/qpgJCG9gJhE?feature=shared",
             "percent": 100
         }
     ]
