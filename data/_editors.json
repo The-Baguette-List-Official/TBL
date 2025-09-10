@@ -11,16 +11,11 @@
     },
     {
         "role": "admin",
-        "name": "Zek0o",
-        "link": "https://www.youtube.com/@Zek0oGD"
-    },
-    {
-        "role": "admin",
         "name": "Seth",
         "link": "https://www.youtube.com/@Seth_levrai"
     },
     {
-        "role": "helper",
+        "role": "admin",
         "name": "Zek0o",
         "link": "https://www.youtube.com/@Zek0oGD"
     },
@@ -33,5 +28,10 @@
         "role": "dev",
         "name": "Seth",
         "link": "https://www.youtube.com/@Seth_levrai"
+    },
+    {
+        "role": "helper",
+        "name": "Zek0o",
+        "link": "https://www.youtube.com/@Zek0oGD"
     }
 ]
