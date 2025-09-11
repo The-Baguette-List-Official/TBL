@@ -9,5 +9,16 @@
     "verification": "https://youtu.be/ovsMfQd5SPk?si=NP3GZrdr2P9Ml3Lb",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+            "user": "Ghouno",
+            "link": "https://youtu.be/LhHwiv3kzWY?si=HlHcKVcVmVItQwjq",
+            "percent": 100
+        },
+        {
+            "user": "Loxo",
+            "link": "https://youtu.be/HVOc-hrim-Q",
+            "percent": 100
+        }
+    ]
 }
