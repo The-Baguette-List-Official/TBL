@@ -9,5 +9,11 @@
     "verification": "-id : https://youtu.be/eyw9rbw6gQw",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+            "user": "Senko",
+            "link": "https://youtu.be/F21xoIA6qnY",
+            "percent": 100
+        }
+    ]
 }
