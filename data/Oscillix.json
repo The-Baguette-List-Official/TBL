@@ -1,29 +1,13 @@
 {
     "id": 114253933,
-    "name": "Oscillix",
+    "name": "Oscillix (Buffdate)",
     "author": "YoumanJY",
     "creators": [
         "YoumanJY"
     ],
     "verifier": "YoumanJY",
-    "verification": "https://www.youtube.com/watch?v=7z7Q4q3O-rs",
+    "verification": "https://youtu.be/9iueciUHKfw?si=-zRIjUOAATkGJq1v",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": [
-        {
-    "user": "Loxo",
-    "link": "https://youtu.be/Wi9U0dqen_8",
-    "percent": 100
-},
-        {
-    "user": "Zephyrlawg",
-    "link": "https://youtu.be/fYOT4cW59Kg",
-    "percent": 100
-},
-        {
-    "user": "Darkad",
-    "link": "https://www.youtube.com/watch?v=vOu0xqG5rVc",
-    "percent": 100
-}
-    ]
+    "records": []
 }
