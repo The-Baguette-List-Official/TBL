@@ -9,5 +9,11 @@
     "verification": "https://www.youtube.com/watch?v=BGOPH3FLot0",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+    "user": "Loxo",
+    "link": "https://youtu.be/10e9H9OmN4o",
+    "percent": 100
+}
+    ]
 }
