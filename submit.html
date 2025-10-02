@@ -1,0 +1,21 @@
+<!-- /submit.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Submit a Record</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h1>Submit Your Record</h1>
+  <form id="recordForm">
+    <label>Player: <input name="player" required></label><br>
+    <label>Level: <input name="level" required></label><br>
+    <label>Video Link: <input name="link" required></label><br>
+    <label>Progress %: <input type="number" name="progress" min="1" max="100" required></label><br>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="responseMsg"></div>
+
+  <script src="js/submit.js"></script>
+</body>
+</html>
