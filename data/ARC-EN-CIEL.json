@@ -9,5 +9,11 @@
     "verification": "https://youtu.be/-5bLpIMng0Q",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+    "user": "Lili",
+    "link": "https://youtu.be/9EQrIIOn_Ng",
+    "percent": 100
+}
+    ]
 }
