@@ -1,6 +1,6 @@
 {
     "id": 127099848,
-    "name": "Dark Tears",
+    "name": "Black Tears",
     "author": "zAthena",
     "creators": [
         "zAthena"
@@ -13,6 +13,11 @@
         {
     "user": "Lili",
     "link": "https://youtu.be/QSI2XFDdDxU?si=2ItFS6A5p3Io_MhT",
+    "percent": 100
+},
+        {
+    "user": "Rql'",
+    "link": "https://youtu.be/bITd5QlaKOE",
     "percent": 100
 }
     ]
