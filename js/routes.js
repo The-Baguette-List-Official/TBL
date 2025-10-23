@@ -1,18 +1,19 @@
 import List from './pages/List.js';
 import Leaderboard from './pages/Leaderboard.js';
 import Roulette from './pages/Roulette.js';
-
+import Packs from './pages/Packs.js' ;
 export default [
     { path: '/', component: List },
     { path: '/leaderboard', component: Leaderboard },
     { path: '/roulette', component: Roulette },
+    { path: '/packs', component: Packs }
 ];
 
 const packs = [
   {
-    name: "",
-    levels: ["Level 1", "Level 2", "Level 3"],
-    bonusPoints: 50
+    name: "The Former Top 1's",
+    levels: ["Colorblind", "Champions Road", "My spike is laggy"],
+    bonusPoints: 150
   }
 ];
 
