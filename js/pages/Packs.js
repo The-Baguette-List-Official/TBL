@@ -1,28 +1,34 @@
 export default {
   name: "Packs",
-  props: ["username"], // pass the current username
+  props: ["username"], // pass current username
   data() {
     return {
-      list: [],   // all levels { name, link, scores }
-      packs: [],  // custom packs
-      loading: true
+      list: [],       // all successfully loaded levels
+      packs: [],      // define your packs here
+      loading: true   // controls loading screen
     };
   },
   async created() {
     try {
+      // 1️⃣ Fetch the master list of levels
       const res = await fetch("/data/_list.json");
+      if (!res.ok) throw new Error("_list.json not found");
       const levelNames = await res.json();
 
-      const promises = levelNames.map(name =>
+      // 2️⃣ Fetch all level JSONs safely
+      const fetchPromises = levelNames.map(name =>
         fetch(`/data/${name}.json`)
-          .then(r => r.json())
+          .then(r => {
+            if (!r.ok) throw new Error(`Failed to fetch ${name}.json`);
+            return r.json();
+          })
           .catch(err => {
-            console.warn("Failed to fetch level:", name, err);
-            return null;
+            console.warn("Level fetch failed:", name, err);
+            return null; // continue even if one level fails
           })
       );
 
-      const results = await Promise.allSettled(promises);
+      const results = await Promise.allSettled(fetchPromises);
       this.list = results
         .filter(r => r.status === "fulfilled" && r.value)
         .map(l => ({
@@ -32,30 +38,29 @@ export default {
           scores: l.value.scores || []
         }));
 
+      // 3️⃣ Define your packs
       this.packs = [
         {
-          name: "The Former Top 1's",
-          levels: ["colorblind", "champions road", "my spike is laggy"],
-          bonusPoints: 150
-        },
-        {
-          name: "Full Pack",
-          levels: this.list.map(l => l.name),
-          bonusPoints: 100
+          name: "",
+          levels: ["Asterion-13", "Doggie Challenge", "Paraklausithuron"],
+          bonusPoints: 50
         }
       ];
 
     } catch (err) {
-      console.error("Error fetching level data:", err);
+      console.error("Error initializing packs:", err);
     } finally {
       this.loading = false;
     }
   },
   methods: {
+    // Find level object by name (case/space/dash insensitive)
     getLevelByName(name) {
       const normalized = name.replace(/-/g, " ").trim().toLowerCase();
       return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null, scores: [] };
     },
+
+    // Convert YouTube link to embed URL
     getEmbedUrl(url) {
       if (!url) return null;
       const short = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
@@ -64,6 +69,8 @@ export default {
       const id = short?.[1] || long?.[1] || embed?.[1];
       return id ? `https://www.youtube.com/embed/${id}` : null;
     },
+
+    // Check if user completed all levels in a pack
     userCompletedPack(pack) {
       if (!this.username) return false;
       return pack.levels.every(levelName => {
@@ -71,6 +78,8 @@ export default {
         return level.scores.some(s => s.name === this.username);
       });
     },
+
+    // Get bonus points if user completed the pack
     getUserBonus(pack) {
       return this.userCompletedPack(pack) ? pack.bonusPoints : 0;
     }
@@ -102,10 +111,10 @@ export default {
             ></iframe>
           </div>
         </div>
-        <p v-if="userCompletedPack(pack)" class="bonus">
+        <p class="bonus" v-if="userCompletedPack(pack)">
           Completed! +{{ pack.bonusPoints }} pts
         </p>
-        <p v-else class="bonus">
+        <p class="bonus" v-else>
           Bonus: +{{ pack.bonusPoints }} pts (incomplete)
         </p>
       </div>
