@@ -1,77 +1,47 @@
-#tab-packs {
-    min-height: calc(100vh - 80px); /* adjust for header height */
-    padding: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-    align-items: flex-start;
-    background: url('/assets/bg-roulette.jpg') no-repeat center center/cover;
-    transition: background 0.3s;
+.page-roulette-container {
+  min-height: 100vh;
+  background: var(--bg-dark, #0b0b0f);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
 }
 
-/* Individual pack card */
-.pack-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 1rem;
-    padding: 1rem 1.5rem;
-    width: 320px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
+.spinner {
+  margin-top: 100px;
+  font-size: 1.5rem;
+  opacity: 0.8;
 }
 
-.pack-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+.packs-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
 }
 
-/* Pack title */
-.pack-card h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+.pack-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform 0.2s ease;
 }
 
-/* Level list inside pack */
-.pack-card ul {
-    list-style-type: disc;
-    padding-left: 1.2rem;
-    margin: 0;
-    color: #fff;
-    font-size: 1rem;
+.pack-item:hover {
+  transform: translateY(-4px);
 }
 
-/* Video embeds */
-.pack-card .videos {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+.pack-item h2 {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
 }
 
-.pack-card .video-frame iframe {
-    border-radius: 0.5rem;
-}
-
-/* Bonus points */
-.pack-card .bonus {
-    font-weight: bold;
-    text-align: center;
-    margin-top: 0.5rem;
-    color: #ffd700;
-}
-
-/* Responsive for smaller screens */
-@media (max-width: 768px) {
-    #tab-packs {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .pack-card {
-        width: 90%;
-    }
+.video-embed {
+  width: 100%;
+  height: 230px;
+  border-radius: 8px;
 }
