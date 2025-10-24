@@ -1,170 +1,214 @@
-/* MAIN PAGE WRAPPER */
-.page-packs-container {
+
+
+/* - Page wrapper (light mode default) - */
+.page-packs-container,
+main.page-packs {
   position: relative;
   z-index: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: calc(100vh - 100px);
   padding: 40px 20px;
-  color: var(--clr-text-dark);
-  background-color: var(--clr-bg-light);
+  min-height: calc(100vh - 100px);
+  box-sizing: border-box;
+  color: var(--clr-text-dark, #111);
+  background-color: var(--clr-bg-light, #f5f5f7);
   background-image: url('/assets/bg-roulette.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  transition: all 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-.page-packs-container::before {
+/* subtle light overlay so cards stay legible */
+.page-packs-container::before,
+main.page-packs::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.04);
   pointer-events: none;
   z-index: 0;
 }
 
-/* TITLE */
-.page-packs-container h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  text-align: center;
-  color: var(--clr-text-dark);
-  transition: color 0.3s ease;
-  z-index: 1;
-}
-
-/* PACKS GRID WRAPPER */
-.packs-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 30px;
+/* container grid for packs */
+.packs-wrapper,
+.packs-container {
   width: 100%;
   max-width: 1200px;
-  position: relative;
-  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  margin-top: 20px;
+  z-index: 1; /* above overlay */
 }
 
-/* INDIVIDUAL PACK CARD */
+/* ---------- Pack card (supports both .pack and .pack-card) ---------- */
+.pack,
 .pack-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  padding: 25px;
-  transition: transform 0.2s ease, background 0.3s ease;
+  background: rgba(255,255,255,0.92);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 6px 22px rgba(20,20,20,0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
 }
 
+.pack:hover,
 .pack-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
-/* PACK TITLE */
-.pack-card h2 {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 15px;
+/* pack title */
+.pack > h2,
+.pack-card > h2,
+.pack-title {
+  margin: 0 0 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--clr-text-dark, #111);
   text-align: center;
-  color: var(--clr-text-dark);
-  transition: color 0.3s ease;
 }
 
-/* LEVEL LIST */
-.pack-levels {
+/* list of levels inside pack */
+.pack-levels,
+.level-list,
+.pack ul {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
 }
 
-.pack-levels li {
-  margin: 20px 0; /* vertical space between levels */
-  text-align: center;
+/* each level entry — flex column so name above video, with gap */
+.pack-levels li,
+.level-item,
+.pack li {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* space between level name and video */
+  gap: 12px;            /* space between name and video */
+  margin: 18px 0;       /* space between consecutive levels */
+  width: 100%;
 }
 
-/* LEVEL NAME LINK */
-.pack-levels a {
+/* level name link / title */
+.pack-levels a,
+.level-name,
+.pack a {
   display: inline-block;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--clr-accent);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--clr-accent, #0b84ff);
   text-decoration: none;
-  margin-bottom: 6px;
-  transition: color 0.2s ease;
+  text-align: center;
+  transition: color 0.15s ease;
+  word-break: break-word;
 }
 
-.pack-levels a:hover {
-  color: var(--clr-accent-hover);
+.pack-levels a:hover,
+.pack a:hover {
+  color: var(--clr-accent-hover, #6fb5ff);
 }
 
-/* VIDEO EMBEDS */
+/* iframe / video styling — responsive + spaced */
+.pack iframe,
 .pack-video,
-.pack-levels iframe {
-  display: block;
-  width: 90%;
-  max-width: 640px;
+.pack-levels iframe,
+.level-video {
+  width: 100%;
+  max-width: 720px;
   aspect-ratio: 16 / 9;
   border-radius: 10px;
   border: none;
-  margin: 10px auto 0 auto;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  margin: 0 auto; /* center the video */
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.pack-video:hover,
-.pack-levels iframe:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+.pack iframe:hover,
+.pack-video:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
 }
 
-/* Extra space between packs */
-.pack {
-  margin-bottom: 40px;
+/* If a pack-level has no video */
+.no-video,
+.pack .no-video {
+  color: #777;
+  font-size: 0.95rem;
 }
 
-/* DARK MODE STYLING */
-.dark .page-packs-container {
-  background-color: #0a0a0a;
+/* extra spacing between full packs */
+.pack,
+.pack-card {
+  margin-bottom: 26px;
+}
+
+/* ---------- Dark mode variations (two selectors to be resilient) ---------- */
+.dark .page-packs-container,
+.page-packs-container.dark,
+.dark main.page-packs,
+main.page-packs.dark {
+  background-color: #070707;
   background-image: url('/assets/bg-roulette.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  color: #f0f0f0;
+  color: #f6f6f6;
 }
 
-.dark .page-packs-container::before {
-  background: rgba(0, 0, 0, 0.45);
+.dark .page-packs-container::before,
+.page-packs-container.dark::before,
+.dark main.page-packs::before,
+main.page-packs.dark::before {
+  background: rgba(0,0,0,0.46);
 }
 
-.dark .page-packs-container h1,
-.dark .pack-card h2 {
-  color: #f0f0f0;
+/* dark pack card */
+.dark .pack,
+.page-packs-container.dark .pack,
+.dark .pack-card,
+.page-packs-container.dark .pack-card {
+  background: rgba(18,18,18,0.92);
+  box-shadow: 0 6px 26px rgba(0,0,0,0.6);
 }
 
-.dark .pack-card {
-  background: rgba(20, 20, 20, 0.85);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
+.dark .pack:hover,
 .dark .pack-card:hover {
-  background: rgba(30, 30, 30, 0.9);
+  background: rgba(30,30,30,0.95);
 }
 
-.dark .pack-levels a {
-  color: #82b3ff;
+/* dark text colors for titles / links */
+.dark .pack > h2,
+.page-packs-container.dark .pack > h2,
+.dark .pack-card > h2 {
+  color: #fff;
 }
 
-.dark .pack-levels a:hover {
-  color: #b5d3ff;
+.dark .pack-levels a,
+.page-packs-container.dark .pack-levels a {
+  color: #8fbfff;
+}
+
+.dark .pack-levels a:hover,
+.page-packs-container.dark .pack-levels a:hover {
+  color: #cfe6ff;
+}
+
+/* responsive tweaks */
+@media (max-width: 900px) {
+  .packs-wrapper,
+  .packs-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pack iframe,
+  .pack-video,
+  .pack-levels iframe {
+    max-width: 100%;
+    width: 100%;
+  }
 }
