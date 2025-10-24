@@ -8,7 +8,7 @@ export default {
       packs: [
         {
           name: "The Former Top 1's",
-          levelFileNames: ["Colorblind", "Champions-Road", "My-Spike-Is-Laggy"],
+          levelFileNames: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
           bonusPoints: 150,
         },
       ],
