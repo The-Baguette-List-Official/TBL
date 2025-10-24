@@ -2,98 +2,97 @@ export default {
   name: "Packs",
   data() {
     return {
-      loading: true,
       packs: [
         {
           name: "The Former Top 1's",
-          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy", "Bobsawamba"],
-          bonusPoints: 250
+          bonusPoints: 200,
+          levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"],
         }
       ],
-      videos: [],
+      loading: true,
       error: null,
     };
   },
+
+  async mounted() {
+    try {
+      for (const pack of this.packs) {
+        const fetchedLevels = [];
+
+        for (const levelName of pack.levels) {
+          // Build path to the JSON file
+          const levelPath = `/data/${levelName}.json`;
+
+          try {
+            const res = await fetch(levelPath);
+            if (!res.ok) continue;
+
+            const data = await res.json();
+
+            // Use the "verification" key instead of "link"
+            const ytUrl = data.verification || null;
+            const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
+
+            // Convert dashes to spaces for display
+            const displayName = levelName.replace(/-/g, " ");
+
+            fetchedLevels.push({
+              name: displayName,
+              embedUrl,
+            });
+          } catch (err) {
+            console.warn(`Failed to load ${levelName}.json`);
+          }
+        }
+
+        pack.levels = fetchedLevels;
+      }
+      this.loading = false;
+    } catch (err) {
+      this.error = err.message;
+      this.loading = false;
+    }
+  },
+
+  methods: {
+    // Converts full YouTube URLs to embed format
+    convertToEmbed(url) {
+      if (!url) return null;
+
+      const ytMatch =
+        url.match(
+          /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
+        );
+
+      if (ytMatch && ytMatch[1]) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}`;
+      }
+      return null;
+    },
+  },
+
   template: `
-    <main class="page-roulette-container" v-if="loading">
-      <div class="spinner">Loading packs...</div>
+    <main v-if="loading" class="page-packs-container">
+      <p class="type-label-lg">Loading packs...</p>
     </main>
 
-    <main class="page-roulette-container" v-else>
-      <div v-if="error" class="error">{{ error }}</div>
-
-      <div v-for="pack in videos" :key="pack.name" class="pack-card">
-        <h2>{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
-        <div class="video-grid">
-          <div
-            v-for="level in pack.levels"
-            :key="level.name"
-            class="video-item"
-          >
-            <h3>{{ level.name }}</h3>
+    <main v-else class="page-packs-container">
+      <div v-for="pack in packs" class="pack">
+        <h2 class="pack-title">{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
+        <div class="pack-levels">
+          <div v-for="level in pack.levels" class="pack-level">
+            <h3 class="level-name">{{ level.name }}</h3>
             <iframe
               v-if="level.embedUrl"
+              class="level-video"
               :src="level.embedUrl"
               frameborder="0"
               allowfullscreen
             ></iframe>
-            <p v-else>No verification video found</p>
+            <p v-else class="no-video">No verification video found</p>
           </div>
         </div>
       </div>
     </main>
   `,
-  async mounted() {
-    try {
-      const videoPacks = [];
-
-      for (const pack of this.packs) {
-        const levelVideos = [];
-
-        for (const levelName of pack.levels) {
-          const levelPath = `/data/${encodeURIComponent(levelName)}.json`;
-
-          try {
-            const res = await fetch(levelPath);
-            if (!res.ok) continue;
-            const data = await res.json();
-
-            const name = rawLevelName.replace(/-/g, " ");
-
-            const embedUrl = this.convertToEmbed(data.verification);
-            levelVideos.push({
-              name: levelName,
-              embedUrl,
-            });
-          } catch (err) {
-            console.warn("Could not load level:", levelName, err);
-          }
-        }
-
-        videoPacks.push({
-          name: pack.name,
-          levels: levelVideos,
-          bonusPoints: pack.bonusPoints,
-        });
-      }
-
-      this.videos = videoPacks;
-    } catch (err) {
-      console.error(err);
-      this.error = "Failed to load packs.";
-    } finally {
-      this.loading = false;
-    }
-  },
-  methods: {
-    convertToEmbed(link) {
-      if (!link) return null;
-      // Handle multiple YouTube URL formats
-      const match = link.match(/(?:youtu\.be\/|v=|embed\/)([^?&]+)/);
-      if (match && match[1]) {
-        return `https://www.youtube.com/embed/${match[1]}`;
-      }
-      return null;
-    },
-  },
 };
