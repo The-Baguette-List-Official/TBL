@@ -7,8 +7,9 @@ export default {
           name: "The Former Top 1's",
           bonusPoints: 200,
           levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"],
-        }
+        },
       ],
+      levelData: {}, // Will be populated with verification arrays
       loading: true,
       error: null,
     };
@@ -16,11 +17,11 @@ export default {
 
   async mounted() {
     try {
+      // Fetch level JSON files and populate levelData
       for (const pack of this.packs) {
         const fetchedLevels = [];
 
         for (const levelName of pack.levels) {
-          // Build path to the JSON file
           const levelPath = `/data/${levelName}.json`;
 
           try {
@@ -29,8 +30,13 @@ export default {
 
             const data = await res.json();
 
-            // Use the "verification" key instead of "link"
-            const ytUrl = data.verification || null;
+            // Store verification array in levelData for leaderboard use
+            this.levelData[levelName] = {
+              verification: data.verification || [],
+            };
+
+            // Convert verification to YouTube embed URL
+            const ytUrl = data.verification ? data.verification[0] : null; // optional: first verification link
             const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
 
             // Convert dashes to spaces for display
@@ -47,6 +53,7 @@ export default {
 
         pack.levels = fetchedLevels;
       }
+
       this.loading = false;
     } catch (err) {
       this.error = err.message;
