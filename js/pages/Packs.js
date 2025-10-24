@@ -30,7 +30,7 @@ export default {
             :key="level.name"
             class="video-item"
           >
-            <h3>{{ level.name }}</h3>
+            <h3>{{ level.displayName }}</h3>
             <iframe
               v-if="level.embedUrl"
               :src="level.embedUrl"
