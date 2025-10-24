@@ -8,14 +8,23 @@ export const store = Vue.reactive({
     },
 });
 
+// Create root app
 const app = Vue.createApp({
-    data: () => ({ store }),
-});
-const router = VueRouter.createRouter({
-    history: VueRouter.createWebHashHistory(),
-    routes,
+    setup() {
+        return { store };
+    }
 });
 
-app.use(router);
+// Setup router safely
+try {
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHashHistory(),
+        routes,
+    });
 
-app.mount('#app');
+    app.use(router);
+    app.mount('#app');
+
+} catch (err) {
+    console.error("Error initializing Vue:", err);
+}
