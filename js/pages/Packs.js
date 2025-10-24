@@ -4,7 +4,7 @@ export default {
     return {
       packs: [
         {
-          name: "Starter Pack",
+          name: "The Former Top 1's",
           levelFileNames: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
           bonusPoints: 150,
         },
