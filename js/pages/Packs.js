@@ -6,8 +6,8 @@ export default {
       packs: [
         {
           name: "The Former Top 1's",
-          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
-          bonusPoints: 150
+          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy", "Boobsawamba"],
+          bonusPoints: 250
         }
       ],
       videos: [],
