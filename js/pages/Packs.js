@@ -2,48 +2,52 @@ export default {
   name: "Packs",
   data() {
     return {
-      list: [],
-      packs: [],
-      loading: true,
+      list: [],   // all levels loaded from _list.json
+      packs: [],  // predefined packs
+      loading: true
     };
   },
   async created() {
     try {
       const res = await fetch("/data/_list.json");
+      if (!res.ok) throw new Error("_list.json not found");
       const levelNames = await res.json();
 
       const fetchPromises = levelNames.map(name =>
         fetch(`/data/${encodeURIComponent(name)}.json`)
-          .then(r => r.json())
+          .then(r => r.ok ? r.json() : null)
           .catch(() => null)
       );
 
-      const results = await Promise.allSettled(fetchPromises);
+      const results = await Promise.all(fetchPromises);
 
       this.list = results
-        .filter(r => r.status === "fulfilled" && r.value)
+        .filter(l => l) // remove nulls
         .map(l => ({
-          name: l.value.name,
-          normalizedName: l.value.name.replace(/-/g, " ").trim().toLowerCase(),
-          link: l.value.link,
-          scores: l.value.scores || [] // already in the JSON
+          name: l.name || "Unknown",
+          normalizedName: (l.name || "Unknown").replace(/-/g, " ").trim().toLowerCase(),
+          link: l.link || null,
+          scores: l.scores || []
         }));
 
+      // Example packs
       this.packs = [
         {
           name: "The Former Top 1's",
           levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
-          bonusPoints: 150,
+          bonusPoints: 150
         }
       ];
+
     } catch (err) {
-      console.error(err);
+      console.error("Error loading packs:", err);
     } finally {
-      this.loading = false;
+      this.loading = false; // ✅ ensures it doesn’t get stuck
     }
   },
   methods: {
     getLevelByName(name) {
+      if (!this.list.length) return { name: "Unknown", link: null, scores: [] };
       const normalized = name.replace(/-/g, " ").trim().toLowerCase();
       return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null, scores: [] };
     },
@@ -55,16 +59,15 @@ export default {
       const id = short?.[1] || long?.[1] || embed?.[1];
       return id ? `https://www.youtube.com/embed/${id}` : null;
     },
-    // Check which users have completed a pack
     getUsersCompletedPack(pack) {
+      if (!this.list.length) return [];
       const usersPerLevel = pack.levels.map(levelName => {
         const level = this.getLevelByName(levelName);
-        return level.scores.map(s => s.name); // array of users
+        return level.scores.map(s => s.name);
       });
-      if (usersPerLevel.length === 0) return [];
-      // intersection of all arrays → users who appear in every level
+      if (!usersPerLevel.length) return [];
       return usersPerLevel.reduce((a, b) => a.filter(c => b.includes(c)));
-    },
+    }
   },
   template: `
     <div v-if="loading" class="roulette-background">Loading packs...</div>
@@ -99,5 +102,5 @@ export default {
         </p>
       </div>
     </div>
-  `,
+  `
 };
