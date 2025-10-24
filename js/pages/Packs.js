@@ -3,6 +3,13 @@ export default {
   data() {
     return {
       loading: true,
+      packs: [
+        {
+          name: "The Former Top 1's",
+          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
+          bonusPoints: 150
+        }
+      ],
       videos: [],
       error: null,
     };
@@ -14,49 +21,62 @@ export default {
 
     <main class="page-roulette-container" v-else>
       <div v-if="error" class="error">{{ error }}</div>
-      <div v-else class="packs-container">
-        <div v-for="video in videos" :key="video.name" class="pack-item">
-          <h2>{{ video.name }}</h2>
-          <iframe
-            v-if="video.embedUrl"
-            :src="video.embedUrl"
-            frameborder="0"
-            allowfullscreen
-            class="video-embed"
-          ></iframe>
-          <p v-else>No video link found.</p>
+
+      <div v-for="pack in videos" :key="pack.name" class="pack-card">
+        <h2>{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
+        <div class="video-grid">
+          <div
+            v-for="level in pack.levels"
+            :key="level.name"
+            class="video-item"
+          >
+            <h3>{{ level.name }}</h3>
+            <iframe
+              v-if="level.embedUrl"
+              :src="level.embedUrl"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+            <p v-else>No video found</p>
+          </div>
         </div>
       </div>
     </main>
   `,
   async mounted() {
     try {
-      // fetch the list of levels from _list.json
-      const listResponse = await fetch("/data/_list.json");
-      const levelNames = await listResponse.json();
+      const videoPacks = [];
 
-      const videos = [];
+      for (const pack of this.packs) {
+        const levelVideos = [];
 
-      // Fetch each level JSON file and extract its link
-      for (const levelName of levelNames) {
-        const levelFile = `/data/${encodeURIComponent(levelName)}.json`;
-        try {
-          const res = await fetch(levelFile);
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data.link) {
-            // Convert the YouTube link to an embeddable format
+        for (const levelName of pack.levels) {
+          const levelPath = `/data/${encodeURIComponent(levelName)}.json`;
+
+          try {
+            const res = await fetch(levelPath);
+            if (!res.ok) continue;
+            const data = await res.json();
             const embedUrl = this.convertToEmbed(data.link);
-            videos.push({ name: levelName, embedUrl });
+            levelVideos.push({
+              name: levelName,
+              embedUrl,
+            });
+          } catch (err) {
+            console.warn("Could not load level:", levelName, err);
           }
-        } catch (e) {
-          console.warn("Could not load", levelFile, e);
         }
+
+        videoPacks.push({
+          name: pack.name,
+          levels: levelVideos,
+          bonusPoints: pack.bonusPoints,
+        });
       }
 
-      this.videos = videos;
-    } catch (e) {
-      console.error(e);
+      this.videos = videoPacks;
+    } catch (err) {
+      console.error(err);
       this.error = "Failed to load packs.";
     } finally {
       this.loading = false;
@@ -65,7 +85,6 @@ export default {
   methods: {
     convertToEmbed(link) {
       if (!link) return null;
-      // handles youtu.be, youtube.com/watch?v= and other variants
       const match = link.match(/(?:youtu\.be\/|v=)([^&]+)/);
       return match ? `https://www.youtube.com/embed/${match[1]}` : null;
     },
