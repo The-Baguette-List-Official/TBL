@@ -25,7 +25,6 @@
         <link rel="stylesheet" type="text/css" href="/css/components/tabs.css" />
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
@@ -71,5 +70,6 @@
             </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
+        <script type="module" src="/js/main.js"></script>
     </body>
 </html>
