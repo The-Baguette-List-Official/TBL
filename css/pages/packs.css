@@ -1,143 +1,110 @@
-/* MAIN PAGE WRAPPER */
-.page-packs-container {
+main.page-packs {
   position: relative;
-  z-index: 0;
+  min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: calc(100vh - 100px);
   padding: 40px 20px;
-  color: var(--clr-text-dark);
-  background-color: var(--clr-bg-light);
-  background-image: url('/assets/bg-roulette.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
+  background: var(--clr-bg-light);
+  background-image: url("../assets/bg-roulette.jpg");
+  background-position: center;
   background-size: cover;
-  transition: all 0.3s ease;
+  color: var(--clr-text-dark);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.page-packs-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.05);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* TITLE SECTION */
-.page-packs-container h1 {
+main.page-packs h1 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 30px;
-  text-align: center;
   color: var(--clr-text-dark);
-  transition: color 0.3s ease;
-  z-index: 1;
+  text-align: center;
 }
 
-/* PACK CARDS WRAPPER */
-.packs-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+.pack {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  margin-bottom: 24px;
   width: 100%;
-  max-width: 1200px;
-  position: relative;
-  z-index: 1;
-}
-
-/* INDIVIDUAL PACK CARD */
-.pack-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(6px);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  padding: 20px;
+  max-width: 900px;
   transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.pack-card:hover {
-  transform: translateY(-4px);
+.pack:hover {
+  transform: translateY(-3px);
   background: rgba(255, 255, 255, 0.95);
 }
 
-.pack-card h2 {
+.pack h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 10px;
   text-align: center;
+  margin-bottom: 15px;
   color: var(--clr-text-dark);
-  transition: color 0.3s ease;
 }
 
-/* LEVEL LIST */
-.pack-levels {
+.pack ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.pack-levels li {
+.pack li {
   margin: 10px 0;
   text-align: center;
 }
 
-.pack-levels a {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--clr-accent);
+.pack a {
   text-decoration: none;
+  color: var(--clr-accent);
+  font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.pack-levels a:hover {
+.pack a:hover {
   color: var(--clr-accent-hover);
 }
 
-/* EMBEDDED VIDEO */
-.pack-video {
+/* YouTube video embed */
+.pack iframe {
+  display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
+  border-radius: 10px;
   border: none;
-  border-radius: 0.75rem;
   margin-top: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* DARK MODE */
-.dark .page-packs-container {
-  background-color: #010101;
-  background-image: url('/assets/bg-roulette.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
+.dark main.page-packs {
+  background: #0e0e0e;
+  background-image: url("../assets/bg-roulette.jpg");
+  background-position: center;
   background-size: cover;
   color: #f0f0f0;
 }
 
-.dark .page-packs-container::before {
-  background: rgba(0, 0, 0, 0.45);
+.dark .pack {
+  background: rgba(25, 25, 25, 0.9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-.dark .page-packs-container h1,
-.dark .pack-card h2 {
+.dark .pack:hover {
+  background: rgba(35, 35, 35, 0.95);
+}
+
+.dark .pack h2 {
   color: #f0f0f0;
 }
 
-.dark .pack-card {
-  background: rgba(20, 20, 20, 0.85);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.dark .pack-card:hover {
-  background: rgba(30, 30, 30, 0.9);
-}
-
-.dark .pack-levels a {
+.dark .pack a {
   color: #82b3ff;
 }
 
-.dark .pack-levels a:hover {
+.dark .pack a:hover {
   color: #b5d3ff;
 }
