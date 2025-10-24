@@ -31,7 +31,7 @@ export default {
                 <p class="type-label-lg">#{{ i + 1 }}</p>
               </td>
               <td class="total">
-                <p class="type-label-lg">{{ localize(ientry.total) }}</p>
+                <p class="type-label-lg">{{ localize(ientry.total) }}<span v-if="ientry.packBonuses"> (+{{ ientry.packBonuses }})</span></p>
               </td>
               <td class="user" :class="{ 'active': selected == i }">
                 <button @click="selected = i">
@@ -96,6 +96,33 @@ export default {
       const [leaderboard, err] = await fetchLeaderboard();
       this.leaderboard = leaderboard || [];
       this.err = err || [];
+
+      const packsComponent = this.$root.$refs.packsComponent;
+      if (packsComponent && packsComponent.packs && packsComponent.levelData) {
+        this.leaderboard = this.leaderboard.map(player => {
+          let totalBonus = 0;
+
+          packsComponent.packs.forEach(pack => {
+            // Extract original level names from objects
+            const levelNames = pack.levels.map(l => l.name.replace(/\s+/g, "-"));
+
+            const completedAll = levelNames.every(levelName => {
+              const levelData = packsComponent.levelData[levelName];
+              if (!levelData || !levelData.verification) return false;
+              return levelData.verification.includes(player.user);
+            });
+
+            if (completedAll) totalBonus += pack.bonusPoints;
+          });
+
+          return {
+            ...player,
+            total: player.total + totalBonus,
+            packBonuses: totalBonus,
+          };
+        });
+      }
+
     } catch (e) {
       console.error("Error fetching leaderboard:", e);
       this.leaderboard = [];
@@ -108,4 +135,3 @@ export default {
     localize,
   },
 };
-
