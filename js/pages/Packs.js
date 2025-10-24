@@ -3,32 +3,29 @@ export default {
   props: ["username"], // pass current username
   data() {
     return {
-      list: [],       // all successfully loaded levels
-      packs: [],      // define your packs here
-      loading: true   // controls loading screen
+      list: [],   // all loaded levels
+      packs: [],  // define your packs here
+      loading: true
     };
   },
   async created() {
     try {
-      // 1️⃣ Fetch the master list of levels
       const res = await fetch("/data/_list.json");
       if (!res.ok) throw new Error("_list.json not found");
       const levelNames = await res.json();
 
-      // 2️⃣ Fetch all level JSONs safely
+      // Fetch all levels safely
       const fetchPromises = levelNames.map(name =>
-        fetch(`/data/${name}.json`)
-          .then(r => {
-            if (!r.ok) throw new Error(`Failed to fetch ${name}.json`);
-            return r.json();
-          })
+        fetch(`/data/${encodeURIComponent(name)}.json`)
+          .then(r => r.json())
           .catch(err => {
-            console.warn("Level fetch failed:", name, err);
-            return null; // continue even if one level fails
+            console.warn("Failed to fetch level:", name, err);
+            return null;
           })
       );
 
       const results = await Promise.allSettled(fetchPromises);
+
       this.list = results
         .filter(r => r.status === "fulfilled" && r.value)
         .map(l => ({
@@ -38,29 +35,36 @@ export default {
           scores: l.value.scores || []
         }));
 
-      // 3️⃣ Define your packs
+      // Define packs
       this.packs = [
         {
-          name: "The Former Top 1's",
-          levels: ["colorblind", "champions road", "my spike is laggy"],
-          bonusPoints: 150
+          name: "Starter Pack",
+          levels: ["Asterion-13", "Doggie Challenge", "Paraklausithuron"],
+          bonusPoints: 50
+        },
+        {
+          name: "Challenge Pack",
+          levels: ["Colorblind", "Dusk Garden", "Known"],
+          bonusPoints: 75
+        },
+        {
+          name: "Full Game Pack",
+          levels: this.list.map(l => l.name),
+          bonusPoints: 100
         }
       ];
 
     } catch (err) {
       console.error("Error initializing packs:", err);
     } finally {
-      this.loading = false;
+      this.loading = false; // ✅ Always stop loading
     }
   },
   methods: {
-    // Find level object by name (case/space/dash insensitive)
     getLevelByName(name) {
       const normalized = name.replace(/-/g, " ").trim().toLowerCase();
       return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null, scores: [] };
     },
-
-    // Convert YouTube link to embed URL
     getEmbedUrl(url) {
       if (!url) return null;
       const short = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
@@ -69,8 +73,6 @@ export default {
       const id = short?.[1] || long?.[1] || embed?.[1];
       return id ? `https://www.youtube.com/embed/${id}` : null;
     },
-
-    // Check if user completed all levels in a pack
     userCompletedPack(pack) {
       if (!this.username) return false;
       return pack.levels.every(levelName => {
@@ -78,10 +80,18 @@ export default {
         return level.scores.some(s => s.name === this.username);
       });
     },
-
-    // Get bonus points if user completed the pack
     getUserBonus(pack) {
       return this.userCompletedPack(pack) ? pack.bonusPoints : 0;
+    },
+    // Returns total bonus for a username across all packs
+    getTotalBonus(username) {
+      return this.packs.reduce((sum, pack) => {
+        const completed = pack.levels.every(levelName => {
+          const level = this.getLevelByName(levelName);
+          return level.scores.some(s => s.name === username);
+        });
+        return sum + (completed ? pack.bonusPoints : 0);
+      }, 0);
     }
   },
   template: `
