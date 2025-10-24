@@ -1,116 +1,143 @@
+/* MAIN PAGE WRAPPER */
 .page-packs-container {
+  position: relative;
+  z-index: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   min-height: calc(100vh - 100px);
-  background-color: var(--clr-bg-light);
   padding: 40px 20px;
   color: var(--clr-text-dark);
+  background-color: var(--clr-bg-light);
+  background-image: url('/assets/bg-roulette.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   transition: all 0.3s ease;
 }
 
-/* PACK CONTAINER */
-.pack {
-  background-color: #f4f4f4;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 1200px;
-  margin-bottom: 40px;
-  padding: 25px 30px;
-  transition: all 0.3s ease;
+.page-packs-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.pack:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-}
-
-/* TITLE */
-.pack-title {
-  text-align: center;
-  font-size: 1.8rem;
+/* TITLE SECTION */
+.page-packs-container h1 {
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 25px;
-  color: var(--clr-accent);
-  transition: color 0.3s ease;
-}
-
-/* LEVELS GRID */
-.pack-levels {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 30px;
-  justify-items: center;
-}
-
-/* EACH LEVEL CARD */
-.pack-level {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 15px;
-  width: 100%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
   text-align: center;
-  transition: all 0.3s ease;
+  color: var(--clr-text-dark);
+  transition: color 0.3s ease;
+  z-index: 1;
 }
 
-.level-name {
-  font-size: 1.2rem;
+/* PACK CARDS WRAPPER */
+.packs-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  z-index: 1;
+}
+
+/* INDIVIDUAL PACK CARD */
+.pack-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.pack-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.pack-card h2 {
+  font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 10px;
+  text-align: center;
   color: var(--clr-text-dark);
   transition: color 0.3s ease;
 }
 
-/* VIDEO FRAME */
-.level-video {
+/* LEVEL LIST */
+.pack-levels {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pack-levels li {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.pack-levels a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--clr-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.pack-levels a:hover {
+  color: var(--clr-accent-hover);
+}
+
+/* EMBEDDED VIDEO */
+.pack-video {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 12px;
   border: none;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-  margin-bottom: 8px;
-}
-
-.no-video {
-  font-size: 0.9rem;
-  color: #888;
+  border-radius: 0.75rem;
   margin-top: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* ==========================
-   DARK MODE
-   ========================== */
-
+/* DARK MODE */
 .dark .page-packs-container {
-  background-color: #111;
+  background-color: #010101;
+  background-image: url('/assets/bg-roulette.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   color: #f0f0f0;
 }
 
-.dark .pack {
-  background-color: #1b1b1b;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+.dark .page-packs-container::before {
+  background: rgba(0, 0, 0, 0.45);
 }
 
-.dark .pack:hover {
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+.dark .page-packs-container h1,
+.dark .pack-card h2 {
+  color: #f0f0f0;
 }
 
-.dark .pack-title {
-  color: #ffd65b;
+.dark .pack-card {
+  background: rgba(20, 20, 20, 0.85);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.dark .pack-level {
-  background-color: #222;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+.dark .pack-card:hover {
+  background: rgba(30, 30, 30, 0.9);
 }
 
-.dark .level-name {
-  color: #fafafa;
+.dark .pack-levels a {
+  color: #82b3ff;
 }
 
-.dark .no-video {
-  color: #aaa;
+.dark .pack-levels a:hover {
+  color: #b5d3ff;
 }
