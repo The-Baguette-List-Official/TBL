@@ -4,6 +4,6 @@ import Leaderboard from "./pages/Leaderboard.js";
 
 export default [
   { path: "/", component: List },
-  { path: "/roulette", component: Roulette }
+  { path: "/roulette", component: Roulette },
   { path: "/leaderboard", component: Leaderboard }
 ];
