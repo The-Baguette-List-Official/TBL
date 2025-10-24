@@ -1,24 +1,30 @@
-// /js/pages/Packs.js
-
-const level1 = { name: "Colorblind", link: "https://youtu.be/VIDEOID1" };
-const level2 = { name: "Champions-Road", link: "https://youtu.be/VIDEOID2" };
-const level3 = { name: "My-Spike-is-Laggy", link: "https://youtu.be/VIDEOID3" };
-
 export default {
   name: "Packs",
   data() {
     return {
+      list: [], // will hold the JSON data
       packs: [
-        {
-          name: "The Former Top 1's",
-          levels: [level1, level2, level3],
-          bonusPoints: 50,
-        },
-        // other packs...
+        { name: "The Former Top 1's", levelIndices: [4, 12, 15], bonusPoints: 150 },
       ],
+      loading: true,
     };
   },
+  async created() {
+    try {
+      const res = await fetch("/data/list.json"); // your list.json path
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      this.list = await res.json();
+      console.log("Loaded list.json", this.list);
+    } catch (e) {
+      console.error("Failed to load list.json", e);
+    } finally {
+      this.loading = false;
+    }
+  },
   methods: {
+    getLevel(index) {
+      return this.list[index] || { name: "Unknown", link: null };
+    },
     getEmbedUrl(url) {
       if (!url) return null;
       const short = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
@@ -30,24 +36,27 @@ export default {
   },
   template: `
     <div id="tab-packs" class="packs-grid">
-      <div v-for="pack in packs" :key="pack.name" class="pack-card">
-        <h3>{{ pack.name }}</h3>
-        <ul>
-          <li v-for="lvl in pack.levels" :key="lvl.name">{{ lvl.name }}</li>
-        </ul>
-        <div class="videos">
-          <div v-for="lvl in pack.levels" :key="lvl.name + '-vid'" v-if="getEmbedUrl(lvl.link)" class="video-frame">
-            <iframe
-              width="100%"
-              height="180"
-              :src="getEmbedUrl(lvl.link)"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+      <div v-if="loading">Loading packs...</div>
+      <div v-else>
+        <div v-for="pack in packs" :key="pack.name" class="pack-card">
+          <h3>{{ pack.name }}</h3>
+          <ul>
+            <li v-for="i in pack.levelIndices" :key="i">{{ getLevel(i).name }}</li>
+          </ul>
+          <div class="videos">
+            <div v-for="i in pack.levelIndices" :key="i+'-vid'" v-if="getEmbedUrl(getLevel(i).link)" class="video-frame">
+              <iframe
+                width="100%"
+                height="180"
+                :src="getEmbedUrl(getLevel(i).link)"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
           </div>
+          <p class="bonus">Bonus: +{{ pack.bonusPoints }} pts</p>
         </div>
-        <p class="bonus">Bonus: +{{ pack.bonusPoints }} pts</p>
       </div>
     </div>
   `,
