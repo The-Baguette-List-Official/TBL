@@ -1,4 +1,4 @@
-/* - Page wrapper (light mode default) - */
+/* ---------- Page wrapper ---------- */
 .page-packs-container,
 main.page-packs {
   position: relative;
@@ -9,8 +9,8 @@ main.page-packs {
   padding: 40px 20px;
   min-height: calc(100vh - 100px);
   box-sizing: border-box;
-  color: var(--clr-text-dark, #111);
-  background-color: var(--clr-bg-light, #f5f5f7);
+  color: var(--color-on-background, #ffffff);
+  background-color: #1b314f; /* roulette sidebar background color */
   background-image: url('/assets/bg-roulette.jpg');
   background-repeat: no-repeat;
   background-position: center center;
@@ -18,13 +18,12 @@ main.page-packs {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* subtle light overlay so cards stay legible */
 .page-packs-container::before,
 main.page-packs::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255,255,255,0.04);
+  background: rgba(27,49,79,0.6); /* dark overlay like roulette */
   pointer-events: none;
   z-index: 0;
 }
@@ -38,16 +37,16 @@ main.page-packs::before {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 28px;
   margin-top: 20px;
-  z-index: 1; /* above overlay */
+  z-index: 1;
 }
 
-/* ---------- Pack card (supports both .pack and .pack-card) ---------- */
+/* ---------- Pack card ---------- */
 .pack,
 .pack-card {
-  background: rgba(255,255,255,0.92);
-  border-radius: 14px;
+  background: #475a7b; /* roulette level background color */
+  border-radius: 0.5rem;
   padding: 22px;
-  box-shadow: 0 6px 22px rgba(20,20,20,0.08);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.5);
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
   display: flex;
   flex-direction: column;
@@ -58,7 +57,7 @@ main.page-packs::before {
 .pack:hover,
 .pack-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
 }
 
 /* pack title */
@@ -68,11 +67,11 @@ main.page-packs::before {
   margin: 0 0 12px;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--clr-text-dark, #111);
+  color: #ffffff; /* white text like roulette */
   text-align: center;
 }
 
-/* list of levels inside pack */
+/* level list inside pack */
 .pack-levels,
 .level-list,
 .pack ul {
@@ -82,38 +81,37 @@ main.page-packs::before {
   width: 100%;
 }
 
-/* each level entry — flex column so name above video, with gap */
+/* each level entry */
 .pack-levels li,
 .level-item,
 .pack li {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;            /* space between name and video */
+  gap: 12px;            /* space between name and video */
   margin: 18px 0;       /* space between consecutive levels */
   width: 100%;
 }
 
-/* level name link / title */
+/* level name link */
 .pack-levels a,
 .level-name,
 .pack a {
   display: inline-block;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--clr-accent, #0b84ff);
-  text-decoration: none;
+  color: #ffffff;
+  text-decoration: underline; /* match roulette links */
   text-align: center;
-  transition: color 0.15s ease;
   word-break: break-word;
 }
 
 .pack-levels a:hover,
 .pack a:hover {
-  color: var(--clr-accent-hover, #6fb5ff);
+  color: var(--color-on-background, #ffffff);
 }
 
-/* iframe / video styling — responsive + spaced */
+/* iframe / video styling */
 .pack iframe,
 .pack-video,
 .pack-levels iframe,
@@ -121,78 +119,16 @@ main.page-packs::before {
   width: 100%;
   max-width: 720px;
   aspect-ratio: 16 / 9;
-  border-radius: 10px;
+  border-radius: 0.5rem; /* match roulette levels */
   border: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  margin: 0 auto; /* center the video */
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.pack iframe:hover,
-.pack-video:hover {
-  transform: scale(1.01);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-}
-
-/* If a pack-level has no video */
-.no-video,
-.pack .no-video {
-  color: #777;
-  font-size: 0.95rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  margin: 0 auto;
 }
 
 /* extra spacing between full packs */
 .pack,
 .pack-card {
   margin-bottom: 26px;
-}
-
-/* ---------- Dark mode variations (two selectors to be resilient) ---------- */
-.dark .page-packs-container,
-.page-packs-container.dark,
-.dark main.page-packs,
-main.page-packs.dark {
-  background-color: #070707;
-  background-image: url('/assets/bg-roulette.jpg');
-  color: #f6f6f6;
-}
-
-.dark .page-packs-container::before,
-.page-packs-container.dark::before,
-.dark main.page-packs::before,
-main.page-packs.dark::before {
-  background: rgba(0,0,0,0.46);
-}
-
-/* dark pack card */
-.dark .pack,
-.page-packs-container.dark .pack,
-.dark .pack-card,
-.page-packs-container.dark .pack-card {
-  background: rgba(18,18,18,0.92);
-  box-shadow: 0 6px 26px rgba(0,0,0,0.6);
-}
-
-.dark .pack:hover,
-.dark .pack-card:hover {
-  background: rgba(30,30,30,0.95);
-}
-
-/* dark text colors for titles / links */
-.dark .pack > h2,
-.page-packs-container.dark .pack > h2,
-.dark .pack-card > h2 {
-  color: #fff;
-}
-
-.dark .pack-levels a,
-.page-packs-container.dark .pack-levels a {
-  color: #8fbfff;
-}
-
-.dark .pack-levels a:hover,
-.page-packs-container.dark .pack-levels a:hover {
-  color: #cfe6ff;
 }
 
 /* responsive tweaks */
@@ -209,4 +145,34 @@ main.page-packs.dark::before {
     max-width: 100%;
     width: 100%;
   }
+}
+
+/* ---------- Dark mode adjustments ---------- */
+.dark .page-packs-container,
+.page-packs-container.dark,
+.dark main.page-packs,
+main.page-packs.dark {
+  background-color: #1b314f;
+  background-image: url('/assets/bg-roulette.jpg');
+  color: #ffffff;
+}
+
+.dark .page-packs-container::before,
+.page-packs-container.dark::before,
+.dark main.page-packs::before,
+main.page-packs.dark::before {
+  background: rgba(27,49,79,0.6);
+}
+
+.dark .pack,
+.page-packs-container.dark .pack,
+.dark .pack-card,
+.page-packs-container.dark .pack-card {
+  background: #475a7b;
+  box-shadow: 0 6px 26px rgba(0,0,0,0.6);
+}
+
+.dark .pack:hover,
+.dark .pack-card:hover {
+  background: #5a6c8d;
 }
