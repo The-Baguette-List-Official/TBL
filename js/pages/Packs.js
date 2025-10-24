@@ -29,7 +29,6 @@ export default {
           scores: l.value.scores || [] // already in the JSON
         }));
 
-      // Example packs
       this.packs = [
         {
           name: "The Former Top 1's",
