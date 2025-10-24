@@ -97,12 +97,29 @@ export default {
             return this.leaderboard[this.selected];
         },
     },
-    async mounted() {
-        const [leaderboard, err] = await fetchLeaderboard();
-        this.leaderboard = leaderboard;
-        this.err = err;
-        // Hide loading spinner
-        this.loading = false;
+async mounted() {
+  const [leaderboard, err] = await fetchLeaderboard();
+  this.leaderboard = leaderboard;
+  this.err = err;
+
+  const packsComponent = this.$root.$refs.packsComponent;
+  if (packsComponent) {
+    this.leaderboard = this.leaderboard.map(player => {
+      const bonus = packsComponent.packs.reduce((sum, pack) => {
+        const completedUsers = packsComponent.getUsersCompletedPack(pack);
+        return sum + (completedUsers.includes(player.user) ? pack.bonusPoints : 0);
+      }, 0);
+      return {
+        ...player,
+        total: player.total + bonus,
+        packBonuses: bonus,
+      };
+    });
+  }
+
+  this.loading = false;
+}
+
     },
     methods: {
         localize,
