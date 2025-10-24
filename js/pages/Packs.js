@@ -58,7 +58,7 @@ export default {
             if (!res.ok) continue;
             const data = await res.json();
             const embedUrl = this.convertToEmbed(data.verification);
-            const displayName = rawLevelName.replace(/-/g, " "); // show with spaces
+            const displayName = rawLevelName.replace(/-/g, " ");
 
             const embedUrl = this.convertToEmbed(data.verification);
             levelVideos.push({
