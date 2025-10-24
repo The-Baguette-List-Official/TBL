@@ -41,9 +41,9 @@ export default {
       // 3️⃣ Define your packs
       this.packs = [
         {
-          name: "",
-          levels: ["Asterion-13", "Doggie Challenge", "Paraklausithuron"],
-          bonusPoints: 50
+          name: "The Former Top 1's",
+          levels: ["colorblind", "champions road", "my spike is laggy"],
+          bonusPoints: 150
         }
       ];
 
