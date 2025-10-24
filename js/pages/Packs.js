@@ -2,38 +2,31 @@ export default {
   name: "Packs",
   data() {
     return {
-      list: [],   // all levels { name, link }
-      packs: [],  // custom packs
+      list: [],   // populated automatically from /data JSON
+      packs: [
+        {
+          name: "The Former Top 1's",
+          levels: ["Colorblind", "Champions Road", "My spike is laggy"],
+          bonusPoints: 150
+        }
+      ],
       loading: true
     };
   },
   async created() {
     try {
-      // Fetch _list.json (array of level filenames)
       const res = await fetch("/data/_list.json");
       const levelNames = await res.json();
-      
-      // Fetch all level JSONs
-      const promises = levelNames.map(name =>
-        fetch(`/data/${name}.json`).then(r => r.json())
-      );
+
+      const promises = levelNames.map(name => fetch(`/data/${name}.json`).then(r => r.json()));
       const levels = await Promise.all(promises);
-      
-      // Store levels in list
+
+      // Normalize names: remove dashes and trim spaces for matching
       this.list = levels.map(l => ({
         name: l.name,
+        normalizedName: l.name.replace(/-/g, " ").trim().toLowerCase(),
         link: l.link
       }));
-
-      // Define custom packs by level names
-      this.packs = [
-        {
-          name: "The Former Top 1's",
-          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
-          bonusPoints: 150
-        }
-      ];
-
     } catch (err) {
       console.error("Error fetching level data:", err);
     } finally {
@@ -42,7 +35,8 @@ export default {
   },
   methods: {
     getLevelByName(name) {
-      return this.list.find(l => l.name === name) || { name: "Unknown", link: null };
+      const normalized = name.replace(/-/g, " ").trim().toLowerCase();
+      return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null };
     },
     getEmbedUrl(url) {
       if (!url) return null;
@@ -54,8 +48,8 @@ export default {
     }
   },
   template: `
-    <div v-if="loading">Loading packs...</div>
-    <div v-else id="tab-packs" class="packs-grid">
+    <div v-if="loading" class="roulette-background">Loading packs...</div>
+    <div v-else id="tab-packs" class="packs-grid roulette-background">
       <div v-for="pack in packs" :key="pack.name" class="pack-card">
         <h3>{{ pack.name }}</h3>
         <ul>
