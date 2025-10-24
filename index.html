@@ -70,6 +70,6 @@
                 </div>
             </nav>
         </header>
-        <router-view :class="{ dark: store.dark }" :username="store.username"></router-view>
+        <router-view ref="packsComponent" :class="{ dark: store.dark }" :username="store.username"></router-view>
     </body>
 </html>
