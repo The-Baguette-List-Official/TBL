@@ -4,16 +4,17 @@
   align-items: center;
   justify-content: flex-start;
   min-height: calc(100vh - 100px);
-  background-color: var(--clr-bg-dark);
+  background-color: var(--clr-bg-light);
   padding: 40px 20px;
-  color: var(--clr-text-light);
+  color: var(--clr-text-dark);
+  transition: all 0.3s ease;
 }
 
-/* PACKS WRAPPER */
+/* PACK CONTAINER */
 .pack {
-  background-color: var(--clr-bg-light);
+  background-color: #f4f4f4;
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 1200px;
   margin-bottom: 40px;
@@ -23,7 +24,7 @@
 
 .pack:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
 }
 
 /* TITLE */
@@ -33,6 +34,7 @@
   font-weight: 700;
   margin-bottom: 25px;
   color: var(--clr-accent);
+  transition: color 0.3s ease;
 }
 
 /* LEVELS GRID */
@@ -45,19 +47,21 @@
 
 /* EACH LEVEL CARD */
 .pack-level {
-  background-color: var(--clr-bg-dark);
+  background-color: #fff;
   border-radius: 16px;
   padding: 15px;
   width: 100%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 .level-name {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 10px;
-  color: var(--clr-text-light);
+  color: var(--clr-text-dark);
+  transition: color 0.3s ease;
 }
 
 /* VIDEO FRAME */
@@ -66,30 +70,47 @@
   aspect-ratio: 16 / 9;
   border-radius: 12px;
   border: none;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   margin-bottom: 8px;
 }
 
 .no-video {
   font-size: 0.9rem;
-  color: #bbb;
+  color: #888;
   margin-top: 10px;
 }
 
-/* TEXT & THEMES */
-.type-label-lg {
-  color: var(--clr-text-light);
-}
+/* ==========================
+   DARK MODE
+   ========================== */
 
-/* DARK MODE ADJUSTMENTS */
 .dark .page-packs-container {
   background-color: #111;
+  color: #f0f0f0;
 }
 
 .dark .pack {
   background-color: #1b1b1b;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.dark .pack:hover {
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+.dark .pack-title {
+  color: #ffd65b;
 }
 
 .dark .pack-level {
   background-color: #222;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.dark .level-name {
+  color: #fafafa;
+}
+
+.dark .no-video {
+  color: #aaa;
 }
