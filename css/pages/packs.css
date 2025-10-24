@@ -56,3 +56,16 @@
     gap: 1rem;
   }
 }
+
+.video-frame {
+  margin-top: 0.8rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.videos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
