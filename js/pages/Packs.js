@@ -1,28 +1,21 @@
-// js/pages/Packs.js
 export default {
   name: "Packs",
-  props: ["username"],
   data() {
     return {
-      list: [],   // all loaded levels
-      packs: [],  // your packs
-      loading: true
+      list: [],
+      packs: [],
+      loading: true,
     };
   },
   async created() {
     try {
       const res = await fetch("/data/_list.json");
-      if (!res.ok) throw new Error("_list.json not found");
       const levelNames = await res.json();
 
-      // Fetch all levels safely
       const fetchPromises = levelNames.map(name =>
         fetch(`/data/${encodeURIComponent(name)}.json`)
           .then(r => r.json())
-          .catch(err => {
-            console.warn("Failed to fetch level:", name, err);
-            return null;
-          })
+          .catch(() => null)
       );
 
       const results = await Promise.allSettled(fetchPromises);
@@ -33,7 +26,7 @@ export default {
           name: l.value.name,
           normalizedName: l.value.name.replace(/-/g, " ").trim().toLowerCase(),
           link: l.value.link,
-          scores: l.value.scores || []
+          scores: l.value.scores || [] // already in the JSON
         }));
 
       // Example packs
@@ -41,13 +34,13 @@ export default {
         {
           name: "The Former Top 1's",
           levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
-          bonusPoints: 150
+          bonusPoints: 150,
         }
       ];
     } catch (err) {
-      console.error("Error loading packs:", err);
+      console.error(err);
     } finally {
-      this.loading = false; // ✅ prevent stuck on loading
+      this.loading = false;
     }
   },
   methods: {
@@ -63,25 +56,16 @@ export default {
       const id = short?.[1] || long?.[1] || embed?.[1];
       return id ? `https://www.youtube.com/embed/${id}` : null;
     },
-    userCompletedPack(pack) {
-      if (!this.username) return false;
-      return pack.levels.every(levelName => {
+    // Check which users have completed a pack
+    getUsersCompletedPack(pack) {
+      const usersPerLevel = pack.levels.map(levelName => {
         const level = this.getLevelByName(levelName);
-        return level.scores.some(s => s.name === this.username);
+        return level.scores.map(s => s.name); // array of users
       });
+      if (usersPerLevel.length === 0) return [];
+      // intersection of all arrays → users who appear in every level
+      return usersPerLevel.reduce((a, b) => a.filter(c => b.includes(c)));
     },
-    getUserBonus(pack) {
-      return this.userCompletedPack(pack) ? pack.bonusPoints : 0;
-    },
-    getTotalBonus(username) {
-      return this.packs.reduce((sum, pack) => {
-        const completed = pack.levels.every(levelName => {
-          const level = this.getLevelByName(levelName);
-          return level.scores.some(s => s.name === username);
-        });
-        return sum + (completed ? pack.bonusPoints : 0);
-      }, 0);
-    }
   },
   template: `
     <div v-if="loading" class="roulette-background">Loading packs...</div>
@@ -110,13 +94,11 @@ export default {
             ></iframe>
           </div>
         </div>
-        <p class="bonus" v-if="userCompletedPack(pack)">
-          Completed! +{{ pack.bonusPoints }} pts
-        </p>
-        <p class="bonus" v-else>
-          Bonus: +{{ pack.bonusPoints }} pts (incomplete)
+        <p class="bonus">
+          Completed by: {{ getUsersCompletedPack(pack).join(', ') || 'None' }}<br>
+          Bonus: +{{ pack.bonusPoints }} pts
         </p>
       </div>
     </div>
-  `
+  `,
 };
