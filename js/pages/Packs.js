@@ -57,7 +57,7 @@ export default {
             const res = await fetch(levelPath);
             if (!res.ok) continue;
             const data = await res.json();
-            const embedUrl = this.convertToEmbed(data.verification);
+
             const displayName = rawLevelName.replace(/-/g, " ");
 
             const embedUrl = this.convertToEmbed(data.verification);
