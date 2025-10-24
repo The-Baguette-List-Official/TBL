@@ -89,7 +89,7 @@ main.page-packs::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;            /* space between name and video */
+  gap: 15px;            /* space between name and video */
   margin: 18px 0;       /* space between consecutive levels */
   width: 100%;
 }
