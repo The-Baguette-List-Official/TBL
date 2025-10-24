@@ -39,18 +39,8 @@ export default {
       this.packs = [
         {
           name: "Starter Pack",
-          levels: ["Asterion-13", "Doggie Challenge", "Paraklausithuron"],
-          bonusPoints: 50
-        },
-        {
-          name: "Challenge Pack",
-          levels: ["Colorblind", "Dusk Garden", "Known"],
-          bonusPoints: 75
-        },
-        {
-          name: "Full Game Pack",
-          levels: this.list.map(l => l.name),
-          bonusPoints: 100
+          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
+          bonusPoints: 150
         }
       ];
 
