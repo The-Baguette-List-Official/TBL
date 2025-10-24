@@ -5,9 +5,19 @@ export default {
       loading: true,
       packs: [
         {
-          name: "The Former Top 1's",
-          levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
-          bonusPoints: 150
+          name: "Starter Pack",
+          levels: ["Asterion-13", "Doggie-Challenge", "Paraklausithuron"],
+          bonusPoints: 50
+        },
+        {
+          name: "Wave Pack",
+          levels: ["BaguetteFly", "Spaceship-piloooot", "Trouble"],
+          bonusPoints: 100
+        },
+        {
+          name: "Challenge Pack",
+          levels: ["Kazko", "Frozen-Spike", "Lag-spike"],
+          bonusPoints: 75
         }
       ],
       videos: [],
@@ -37,7 +47,7 @@ export default {
               frameborder="0"
               allowfullscreen
             ></iframe>
-            <p v-else>No video found</p>
+            <p v-else>No verification video found</p>
           </div>
         </div>
       </div>
@@ -57,7 +67,8 @@ export default {
             const res = await fetch(levelPath);
             if (!res.ok) continue;
             const data = await res.json();
-            const embedUrl = this.convertToEmbed(data.link);
+
+            const embedUrl = this.convertToEmbed(data.verification);
             levelVideos.push({
               name: levelName,
               embedUrl,
@@ -83,10 +94,14 @@ export default {
     }
   },
   methods: {
-    convertToEmbed(verification) {
-      if (!verification) return null;
-      const match = verification.match(/(?:youtu\.be\/|v=)([^&]+)/);
-      return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+    convertToEmbed(link) {
+      if (!link) return null;
+      // Handle multiple YouTube URL formats
+      const match = link.match(/(?:youtu\.be\/|v=|embed\/)([^?&]+)/);
+      if (match && match[1]) {
+        return `https://www.youtube.com/embed/${match[1]}`;
+      }
+      return null;
     },
   },
 };
