@@ -5,19 +5,9 @@ export default {
       loading: true,
       packs: [
         {
-          name: "Starter Pack",
-          levels: ["Asterion-13", "Doggie-Challenge", "Paraklausithuron"],
-          bonusPoints: 50
-        },
-        {
-          name: "Wave Pack",
-          levels: ["BaguetteFly", "Spaceship-piloooot", "Trouble"],
-          bonusPoints: 100
-        },
-        {
-          name: "Challenge Pack",
-          levels: ["Kazko", "Frozen-Spike", "Lag-spike"],
-          bonusPoints: 75
+          name: "The Former Top 1's",
+          levels: ["Colorblind", "Champions Road", "My Spike is Laggy"],
+          bonusPoints: 150
         }
       ],
       videos: [],
