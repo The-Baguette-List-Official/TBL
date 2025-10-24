@@ -57,6 +57,8 @@ export default {
             const res = await fetch(levelPath);
             if (!res.ok) continue;
             const data = await res.json();
+            const embedUrl = this.convertToEmbed(data.verification);
+            const displayName = rawLevelName.replace(/-/g, " "); // show with spaces
 
             const embedUrl = this.convertToEmbed(data.verification);
             levelVideos.push({
