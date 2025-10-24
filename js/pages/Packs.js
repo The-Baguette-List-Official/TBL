@@ -1,15 +1,10 @@
 export default {
   name: "Packs",
+  props: ["username"], // pass the current username
   data() {
     return {
-      list: [],   // populated automatically from /data JSON
-      packs: [
-        {
-          name: "The Former Top 1's",
-          levels: ["Colorblind", "Champions Road", "My spike is laggy"],
-          bonusPoints: 150
-        }
-      ],
+      list: [],   // all levels { name, link, scores }
+      packs: [],  // custom packs
       loading: true
     };
   },
@@ -18,15 +13,38 @@ export default {
       const res = await fetch("/data/_list.json");
       const levelNames = await res.json();
 
-      const promises = levelNames.map(name => fetch(`/data/${name}.json`).then(r => r.json()));
-      const levels = await Promise.all(promises);
+      const promises = levelNames.map(name =>
+        fetch(`/data/${name}.json`)
+          .then(r => r.json())
+          .catch(err => {
+            console.warn("Failed to fetch level:", name, err);
+            return null;
+          })
+      );
 
-      // Normalize names: remove dashes and trim spaces for matching
-      this.list = levels.map(l => ({
-        name: l.name,
-        normalizedName: l.name.replace(/-/g, " ").trim().toLowerCase(),
-        link: l.link
-      }));
+      const results = await Promise.allSettled(promises);
+      this.list = results
+        .filter(r => r.status === "fulfilled" && r.value)
+        .map(l => ({
+          name: l.value.name,
+          normalizedName: l.value.name.replace(/-/g, " ").trim().toLowerCase(),
+          link: l.value.link,
+          scores: l.value.scores || []
+        }));
+
+      this.packs = [
+        {
+          name: "The Former Top 1's",
+          levels: ["colorblind", "champions road", "my spike is laggy"],
+          bonusPoints: 150
+        },
+        {
+          name: "Full Pack",
+          levels: this.list.map(l => l.name),
+          bonusPoints: 100
+        }
+      ];
+
     } catch (err) {
       console.error("Error fetching level data:", err);
     } finally {
@@ -36,7 +54,7 @@ export default {
   methods: {
     getLevelByName(name) {
       const normalized = name.replace(/-/g, " ").trim().toLowerCase();
-      return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null };
+      return this.list.find(l => l.normalizedName === normalized) || { name: "Unknown", link: null, scores: [] };
     },
     getEmbedUrl(url) {
       if (!url) return null;
@@ -45,6 +63,16 @@ export default {
       const embed = url.match(/embed\/([A-Za-z0-9_-]{11})/);
       const id = short?.[1] || long?.[1] || embed?.[1];
       return id ? `https://www.youtube.com/embed/${id}` : null;
+    },
+    userCompletedPack(pack) {
+      if (!this.username) return false;
+      return pack.levels.every(levelName => {
+        const level = this.getLevelByName(levelName);
+        return level.scores.some(s => s.name === this.username);
+      });
+    },
+    getUserBonus(pack) {
+      return this.userCompletedPack(pack) ? pack.bonusPoints : 0;
     }
   },
   template: `
@@ -74,7 +102,12 @@ export default {
             ></iframe>
           </div>
         </div>
-        <p class="bonus">Bonus: +{{ pack.bonusPoints }} pts</p>
+        <p v-if="userCompletedPack(pack)" class="bonus">
+          Completed! +{{ pack.bonusPoints }} pts
+        </p>
+        <p v-else class="bonus">
+          Bonus: +{{ pack.bonusPoints }} pts (incomplete)
+        </p>
       </div>
     </div>
   `
