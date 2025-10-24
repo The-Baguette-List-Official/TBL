@@ -1,11 +1,10 @@
-// /js/pages/Packs.js
 export default {
   name: "Packs",
   data() {
     return {
       packs: [
         {
-          name: "The Former Top 1's",
+          name: "Starter Pack",
           levelFileNames: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
           bonusPoints: 150,
         },
@@ -15,36 +14,36 @@ export default {
     };
   },
   async created() {
-    // Collect all unique level filenames from packs
     const allFiles = Array.from(new Set(this.packs.flatMap(p => p.levelFileNames)));
-
-    for (const fileName of allFiles) {
+    for (const file of allFiles) {
       try {
-        const resp = await fetch(`/data/${fileName}.json`);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const json = await resp.json();
-        this.levelsData[fileName] = json;
-        console.log("Loaded level:", fileName, json);
-      } catch (err) {
-        console.warn(`Failed to load /data/${fileName}.json`, err);
+        const res = await fetch(`/data/${file}.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        this.levelsData[file] = data;
+        console.log(`Loaded ${file}.json`, data);
+      } catch (e) {
+        console.error(`Error loading ${file}.json`, e);
       }
     }
-
     this.loading = false;
   },
   methods: {
-    getLevelData(fileName) {
-      return this.levelsData[fileName] || null;
+    getLevel(file) {
+      return this.levelsData[file] || {};
     },
     getEmbedUrl(url) {
       if (!url) return null;
-      const match = url.match(
-        /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([A-Za-z0-9_-]{11})/
-      );
-      if (match) {
-        return `https://www.youtube.com/embed/${match[1]}`;
-      }
-      return null;
+      // Support YouTube URL formats
+      let videoId = null;
+      const short = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+      const long = url.match(/v=([A-Za-z0-9_-]{11})/);
+      const embed = url.match(/embed\/([A-Za-z0-9_-]{11})/);
+      if (short) videoId = short[1];
+      else if (long) videoId = long[1];
+      else if (embed) videoId = embed[1];
+      if (!videoId) return null;
+      return `https://www.youtube.com/embed/${videoId}`;
     },
   },
   template: `
@@ -53,15 +52,9 @@ export default {
       <div v-else>
         <div v-for="pack in packs" :key="pack.name" class="pack-card">
           <h3>{{ pack.name }}</h3>
-
           <ul>
             <li v-for="file in pack.levelFileNames" :key="file">
-              <span v-if="getLevelData(file)">
-                {{ getLevelData(file).name }}
-              </span>
-              <span v-else>
-                (missing level: {{ file }})
-              </span>
+              {{ getLevel(file).name || file }}
             </li>
           </ul>
 
@@ -69,14 +62,15 @@ export default {
             <div
               v-for="file in pack.levelFileNames"
               :key="file + '-vid'"
-              v-if="getEmbedUrl(getLevelData(file)?.video)"
+              v-if="getEmbedUrl(getLevel(file).link)"
               class="video-frame"
             >
               <iframe
                 width="100%"
                 height="180"
-                :src="getEmbedUrl(getLevelData(file).video)"
+                :src="getEmbedUrl(getLevel(file).link)"
                 frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
             </div>
