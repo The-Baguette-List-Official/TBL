@@ -10,8 +10,8 @@ main.page-packs {
   min-height: calc(100vh - 100px);
   box-sizing: border-box;
   color: #ffffff;
-  background-color: #000000; /* black background */
-  background-image: none; /* optional, remove bg image for pure black */
+  background-color: #1a1a1a; /* slightly lighter black */
+  background-image: none;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -20,7 +20,7 @@ main.page-packs::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.4); /* subtle overlay */
+  background: rgba(0,0,0,0.35);
   pointer-events: none;
   z-index: 0;
 }
@@ -40,7 +40,7 @@ main.page-packs::before {
 /* ---------- Pack card ---------- */
 .pack,
 .pack-card {
-  background: #111111; /* dark gray boxes */
+  background: #2b2b2b; /* lighter dark gray for boxes */
   border-radius: 0.5rem;
   padding: 22px;
   box-shadow: 0 6px 22px rgba(0,0,0,0.6);
@@ -54,7 +54,7 @@ main.page-packs::before {
 .pack:hover,
 .pack-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
 }
 
 /* pack title */
@@ -64,7 +64,7 @@ main.page-packs::before {
   margin: 0 0 12px;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #ffffff; /* very white */
   text-align: center;
 }
 
@@ -96,8 +96,8 @@ main.page-packs::before {
 .pack a {
   display: inline-block;
   font-size: 1.05rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: #ffffff; /* very white */
   text-decoration: none;
   text-align: center;
   word-break: break-word;
@@ -118,7 +118,7 @@ main.page-packs::before {
   aspect-ratio: 16 / 9;
   border-radius: 0.5rem;
   border: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
   margin: 0 auto;
 }
 
@@ -149,7 +149,7 @@ main.page-packs::before {
 .page-packs-container.dark,
 .dark main.page-packs,
 main.page-packs.dark {
-  background-color: #000000;
+  background-color: #1a1a1a;
   color: #ffffff;
 }
 
@@ -157,18 +157,18 @@ main.page-packs.dark {
 .page-packs-container.dark::before,
 .dark main.page-packs::before,
 main.page-packs.dark::before {
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.35);
 }
 
 .dark .pack,
 .page-packs-container.dark .pack,
 .dark .pack-card,
 .page-packs-container.dark .pack-card {
-  background: #111111;
+  background: #2b2b2b;
   box-shadow: 0 6px 26px rgba(0,0,0,0.6);
 }
 
 .dark .pack:hover,
 .dark .pack-card:hover {
-  background: #222222;
+  background: #3a3a3a; /* slightly lighter hover */
 }
