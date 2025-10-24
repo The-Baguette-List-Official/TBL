@@ -1,6 +1,8 @@
-import Colorblind from "../../data/Colorblind.json";
-import Champions-Road from "../../data/Champions-Road.json";
-import My-Spike-is-Laggy from "../../data/My-Spike-is-Laggy.json";
+// /js/pages/Packs.js
+
+const level1 = { name: "Colorblind", link: "https://youtu.be/VIDEOID1" };
+const level2 = { name: "Champions-Road", link: "https://youtu.be/VIDEOID2" };
+const level3 = { name: "My-Spike-is-Laggy", link: "https://youtu.be/VIDEOID3" };
 
 export default {
   name: "Packs",
@@ -9,9 +11,10 @@ export default {
       packs: [
         {
           name: "The Former Top 1's",
-          levels: [Colorblind, Champions-Road, My-Spike-is-Laggy],
-          bonusPoints: 150,
+          levels: [level1, level2, level3],
+          bonusPoints: 50,
         },
+        // other packs...
       ],
     };
   },
