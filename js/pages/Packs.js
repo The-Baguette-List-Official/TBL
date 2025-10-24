@@ -2,11 +2,11 @@ export default {
   name: "Packs",
   data() {
     return {
-      list: [], // will hold the JSON data
+      list: [], // levels from list.json
       packs: [
         { name: "The Former Top 1's", levelIndices: [4, 12, 15], bonusPoints: 150 },
       ],
-      loading: true,
+      loading: true, // show loading until JSON is fetched
     };
   },
   async created() {
@@ -14,9 +14,9 @@ export default {
       const res = await fetch("/data/_list.json");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       this.list = await res.json();
-      console.log("Loaded list.json", this.list);
+      console.log("Loaded list.json:", this.list);
     } catch (e) {
-      console.error("Failed to load list.json", e);
+      console.error("Failed to load list.json:", e);
     } finally {
       this.loading = false;
     }
@@ -41,10 +41,17 @@ export default {
         <div v-for="pack in packs" :key="pack.name" class="pack-card">
           <h3>{{ pack.name }}</h3>
           <ul>
-            <li v-for="i in pack.levelIndices" :key="i">{{ getLevel(i).name }}</li>
+            <li v-for="i in pack.levelIndices" :key="i">
+              {{ getLevel(i).name }}
+            </li>
           </ul>
           <div class="videos">
-            <div v-for="i in pack.levelIndices" :key="i+'-vid'" v-if="getEmbedUrl(getLevel(i).link)" class="video-frame">
+            <div
+              v-for="i in pack.levelIndices"
+              :key="i+'-vid'"
+              v-if="getEmbedUrl(getLevel(i).link)"
+              class="video-frame"
+            >
               <iframe
                 width="100%"
                 height="180"
