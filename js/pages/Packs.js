@@ -1,10 +1,11 @@
+// js/pages/Packs.js
 export default {
   name: "Packs",
-  props: ["username"], // pass current username
+  props: ["username"],
   data() {
     return {
       list: [],   // all loaded levels
-      packs: [],  // define your packs here
+      packs: [],  // your packs
       loading: true
     };
   },
@@ -35,19 +36,18 @@ export default {
           scores: l.value.scores || []
         }));
 
-      // Define packs
+      // Example packs
       this.packs = [
         {
-          name: "Starter Pack",
+          name: "The Former Top 1's",
           levels: ["Colorblind", "Champions-Road", "My-Spike-is-Laggy"],
           bonusPoints: 150
         }
       ];
-
     } catch (err) {
-      console.error("Error initializing packs:", err);
+      console.error("Error loading packs:", err);
     } finally {
-      this.loading = false; // ✅ Always stop loading
+      this.loading = false; // ✅ prevent stuck on loading
     }
   },
   methods: {
@@ -73,7 +73,6 @@ export default {
     getUserBonus(pack) {
       return this.userCompletedPack(pack) ? pack.bonusPoints : 0;
     },
-    // Returns total bonus for a username across all packs
     getTotalBonus(username) {
       return this.packs.reduce((sum, pack) => {
         const completed = pack.levels.every(levelName => {
