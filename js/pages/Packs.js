@@ -83,9 +83,9 @@ export default {
     }
   },
   methods: {
-    convertToEmbed(link) {
-      if (!link) return null;
-      const match = link.match(/(?:youtu\.be\/|v=)([^&]+)/);
+    convertToEmbed(verification) {
+      if (!verification) return null;
+      const match = verification.match(/(?:youtu\.be\/|v=)([^&]+)/);
       return match ? `https://www.youtube.com/embed/${match[1]}` : null;
     },
   },
