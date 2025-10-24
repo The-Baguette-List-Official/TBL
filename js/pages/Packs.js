@@ -7,8 +7,8 @@ export default {
       // Define packs by pointing to JSON filenames (without extension) for levels
       packs: [
         {
-          name: "Starter Pack",
-          levelFileNames: ["Colorblind", "Champions-Road", "My-spike-is-laggy"],
+          name: "The Former Top 1's",
+          levelFileNames: ["Colorblind", "Champions-Road", "My-Spike-Is-Laggy"],
           bonusPoints: 150,
         },
       ],
