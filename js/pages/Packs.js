@@ -11,7 +11,7 @@ export default {
   },
   async created() {
     try {
-      const res = await fetch("/data/list.json"); // your list.json path
+      const res = await fetch("/data/_list.json");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       this.list = await res.json();
       console.log("Loaded list.json", this.list);
