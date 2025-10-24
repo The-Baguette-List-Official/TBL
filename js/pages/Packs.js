@@ -30,7 +30,7 @@ export default {
             :key="level.name"
             class="video-item"
           >
-            <h3>{{ level.displayName }}</h3>
+            <h3>{{ level.name }}</h3>
             <iframe
               v-if="level.embedUrl"
               :src="level.embedUrl"
@@ -58,7 +58,7 @@ export default {
             if (!res.ok) continue;
             const data = await res.json();
 
-            const displayName = rawLevelName.replace(/-/g, " ");
+            const name = rawLevelName.replace(/-/g, " ");
 
             const embedUrl = this.convertToEmbed(data.verification);
             levelVideos.push({
