@@ -3,7 +3,6 @@ export default {
   data() {
     return {
       packs: [],
-      levelData: {}, // For leaderboard bonus calculation
       loading: true,
       error: null,
     };
@@ -19,7 +18,6 @@ export default {
         const fetchedLevels = [];
 
         for (const levelName of pack.levels) {
-          // Convert level name to file name: spaces → dashes
           const fileName = levelName.replace(/ /g, "-");
           const levelPath = `/data/${fileName}.json`;
 
@@ -28,18 +26,17 @@ export default {
             if (!levelRes.ok) throw new Error(`Failed to fetch ${levelPath}`);
             const data = await levelRes.json();
 
-            // Store verification/completed links
-            this.levelData[levelName] = {
-              verification: data.verification || [],
-              link: data.link || [],
-            };
+            // Use verification first, fallback to link
+            let videoUrl = null;
+            if (Array.isArray(data.verification) && data.verification.length)
+              videoUrl = data.verification[0];
+            else if (Array.isArray(data.link) && data.link.length)
+              videoUrl = data.link[0];
 
-            // Convert first completed link to YouTube embed
-            const ytUrl = Array.isArray(data.link) ? data.link[0] : data.link;
-            const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
+            const embedUrl = videoUrl ? this.convertToEmbed(videoUrl) : null;
 
             fetchedLevels.push({
-              name: levelName, // keep original with spaces/apostrophes
+              name: levelName, // preserve original spacing and apostrophes
               embedUrl,
             });
           } catch (err) {
