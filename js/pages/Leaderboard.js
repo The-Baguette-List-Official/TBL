@@ -13,7 +13,7 @@ export default {
       {
         name: "The Former Top 1's",
         bonusPoints: 200,
-        levels: ["Colorblind", "Champion's-Road", "Bobsawamba", "My-spike-is-laggy"]
+        levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"]
       },
       // Add more packs here if needed
     ],
