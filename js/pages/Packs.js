@@ -11,7 +11,7 @@ export default {
         {
           name: "TBL Favorites I",
           bonusPoints: 75,
-          levels: ["LgTn", "Fleur-de-lotus", "Arc-en-ciel", "Skill-control", "Croissant"],
+          levels: ["LgTn", "Fleur-de-lotus", "Arc-en-Ciel", "Skill-Control", "Croissant"],
         }
       ],
       loading: true,
