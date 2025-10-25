@@ -2,14 +2,7 @@ export default {
   name: "Packs",
   data() {
     return {
-      packs: [
-        {
-          name: "The Former Top 1's",
-          bonusPoints: 200,
-          levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"],
-        },
-      ],
-      levelData: {},
+      packs: [],
       loading: true,
       error: null,
     };
@@ -17,7 +10,13 @@ export default {
 
   async mounted() {
     try {
-      for (const pack of this.packs) {
+      // Fetch pack definitions
+      const res = await fetch("/data/packs.json");
+      if (!res.ok) throw new Error("Failed to load packs.json");
+      const packs = await res.json();
+
+      // For each pack, fetch level data
+      for (const pack of packs) {
         const fetchedLevels = [];
 
         for (const levelName of pack.levels) {
@@ -29,34 +28,32 @@ export default {
 
             const data = await res.json();
 
-            // Ensure verification is treated as an array
-            const verifications = Array.isArray(data.verification)
-              ? data.verification
-              : data.verification
-              ? [data.verification]
-              : [];
-
-            this.levelData[levelName] = { verification: verifications };
-
-            // Use first verification link if available
-            const ytUrl = verifications.length > 0 ? verifications[0] : null;
-            const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
-
             // Convert dashes to spaces for display
             const displayName = levelName.replace(/-/g, " ");
+
+            // Use verification link(s) to create YouTube embeds
+            const verification = data.verification;
+            let embedUrl = null;
+
+            if (Array.isArray(verification) && verification.length > 0) {
+              embedUrl = this.convertToEmbed(verification[0]);
+            } else if (typeof verification === "string") {
+              embedUrl = this.convertToEmbed(verification);
+            }
 
             fetchedLevels.push({
               name: displayName,
               embedUrl,
             });
           } catch (err) {
-            console.warn(`Failed to load ${levelName}.json`, err);
+            console.warn(`Failed to load ${levelName}.json`);
           }
         }
 
         pack.levels = fetchedLevels;
       }
 
+      this.packs = packs;
       this.loading = false;
     } catch (err) {
       this.error = err.message;
@@ -65,6 +62,7 @@ export default {
   },
 
   methods: {
+    // Converts full YouTube URLs to embed format
     convertToEmbed(url) {
       if (!url) return null;
 
@@ -85,10 +83,10 @@ export default {
     </main>
 
     <main v-else class="page-packs-container">
-      <div v-for="pack in packs" class="pack">
+      <div v-for="pack in packs" :key="pack.name" class="pack">
         <h2 class="pack-title">{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
         <div class="pack-levels">
-          <div v-for="level in pack.levels" class="pack-level">
+          <div v-for="level in pack.levels" :key="level.name" class="pack-level">
             <h3 class="level-name">{{ level.name }}</h3>
             <iframe
               v-if="level.embedUrl"
