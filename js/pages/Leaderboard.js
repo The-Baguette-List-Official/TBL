@@ -3,15 +3,14 @@ import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
 
 export default {
-  components: {
-    Spinner,
-  },
+  components: { Spinner },
+
   data: () => ({
     leaderboard: [],
     loading: true,
     selected: 0,
     err: [],
-    packs: [], // store packs for bonus calculation
+    packs: [],
   }),
 
   template: `
@@ -21,8 +20,8 @@ export default {
 
     <main v-else class="page-leaderboard-container">
       <div class="page-leaderboard">
-        <div class="error-container">
-          <p class="error" v-if="err.length > 0">
+        <div class="error-container" v-if="err.length > 0">
+          <p class="error">
             Leaderboard may be incorrect, as the following levels could not be loaded: {{ err.join(', ') }}
           </p>
         </div>
@@ -45,8 +44,8 @@ export default {
           </table>
         </div>
 
-        <div class="player-container">
-          <div class="player" v-if="entry">
+        <div class="player-container" v-if="entry">
+          <div class="player">
             <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
             <h3>{{ localize(entry.total) }} pts total</h3>
 
@@ -72,12 +71,13 @@ export default {
               </tr>
             </table>
 
-            <!-- 🟩 Bonus packs section -->
+            <!-- 🟩 Show Pack Bonuses -->
             <div v-if="entry.completedPacks && entry.completedPacks.length > 0" class="bonus-section">
               <h2>Packs Completed</h2>
               <ul>
                 <li v-for="pack in entry.completedPacks" :key="pack.name">
-                  Completed <strong>{{ pack.name }}</strong> Pack (+{{ pack.bonusPoints }} pts)
+                  ✅ Completed <strong>{{ pack.name }}</strong> Pack
+                  <span class="bonus-text">(+{{ pack.bonusPoints }} pts)</span>
                 </li>
               </ul>
             </div>
@@ -108,29 +108,41 @@ export default {
 
   async mounted() {
     try {
-      // Fetch both leaderboard and packs
+      // Get leaderboard
       const [leaderboardData, err] = await fetchLeaderboard();
-      const packsRes = await fetch('/data/packs.json');
-      const packs = packsRes.ok ? await packsRes.json() : [];
 
-      // Compute pack bonuses for each player
+      // Get packs (if you don’t have packs.json, it’ll fall back to your Packs.js definition)
+      let packs = [];
+      try {
+        const packsRes = await fetch('/data/packs.json');
+        if (packsRes.ok) packs = await packsRes.json();
+      } catch {
+        console.warn('No packs.json found, skipping external pack load.');
+      }
+
+      // 🔹 Normalize helper: lower, replace dashes/spaces
+      const normalize = name =>
+        name.toLowerCase().replace(/[-\s]+/g, '');
+
       const updatedLeaderboard = leaderboardData.map(player => {
-        const completedLevels = new Set(player.completed.map(l => l.level.replace(/ /g, "-")));
+        const completedLevels = new Set(
+          player.completed.map(l => normalize(l.level))
+        );
 
         let bonus = 0;
         const completedPacks = [];
 
         for (const pack of packs) {
-          const allCompleted = pack.levels.every(level =>
-            completedLevels.has(level)
+          const allCompleted = pack.levels.every(
+            lvl => completedLevels.has(normalize(lvl))
           );
+
           if (allCompleted) {
             bonus += pack.bonusPoints;
             completedPacks.push(pack);
           }
         }
 
-        // Add bonus points to total
         return {
           ...player,
           total: player.total + bonus,
@@ -138,7 +150,7 @@ export default {
         };
       });
 
-      // Re-sort leaderboard by total points descending
+      // Sort by total points (including bonus)
       updatedLeaderboard.sort((a, b) => b.total - a.total);
 
       this.leaderboard = updatedLeaderboard;
@@ -153,7 +165,5 @@ export default {
     }
   },
 
-  methods: {
-    localize,
-  },
+  methods: { localize },
 };
