@@ -1,17 +1,16 @@
 import { fetchLeaderboard } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
+import packs from '../data/packs.json'; // make sure this path is correct
 
 export default {
-  components: {
-    Spinner,
-  },
+  components: { Spinner },
   data: () => ({
     leaderboard: [],
     loading: true,
     selected: 0,
     err: [],
-    packs: [], // loaded dynamically
+    packs: packs || [],
   }),
   template: `
     <main v-if="loading">
@@ -40,43 +39,41 @@ export default {
           </table>
         </div>
 
-        <div class="player-container">
-          <div class="player" v-if="entry">
+        <div class="player-container" v-if="entry">
+          <div class="player">
             <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
-            <h3>Total Points: {{ entry.total }}</h3>
+            <h3>Total points: {{ entry.total }}</h3>
 
             <div v-if="entry.completedPacks && entry.completedPacks.length > 0" class="completed-packs">
               <h2>Completed Packs</h2>
-              <ul>
-                <li v-for="pack in entry.completedPacks" :key="pack.name">
-                  {{ pack.name }} (+{{ pack.bonusPoints }} pts)
-                </li>
-              </ul>
+              <table class="table">
+                <tr v-for="packName in entry.completedPacks" :key="packName">
+                  <td class="pack-name type-label-lg">{{ packName }}</td>
+                  <td class="pack-points type-label-lg">
+                    +{{ localize(getPackPoints(packName)) }}
+                  </td>
+                </tr>
+              </table>
             </div>
 
-            <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length }})</h2>
+            <h2 v-if="entry.verified.length > 0">Verified Levels ({{ entry.verified.length }})</h2>
             <table class="table" v-if="entry.verified.length > 0">
               <tr v-for="score in entry.verified" :key="score.level">
                 <td class="rank"><p>#{{ score.rank }}</p></td>
-                <td class="level"><a class="type-label-lg" target="_blank" :href="score.verification || score.link">{{ score.level }}</a></td>
+                <td class="level">
+                  <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                </td>
                 <td class="score"><p>+{{ localize(score.score) }}</p></td>
               </tr>
             </table>
 
-            <h2 v-if="entry.completed.length > 0">Completed ({{ entry.completed.length }})</h2>
+            <h2 v-if="entry.completed.length > 0">Completed Levels ({{ entry.completed.length }})</h2>
             <table class="table" v-if="entry.completed.length > 0">
               <tr v-for="score in entry.completed" :key="score.level">
                 <td class="rank"><p>#{{ score.rank }}</p></td>
-                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a></td>
-                <td class="score"><p>+{{ localize(score.score) }}</p></td>
-              </tr>
-            </table>
-
-            <h2 v-if="entry.progressed.length > 0">Progressed ({{ entry.progressed.length }})</h2>
-            <table class="table" v-if="entry.progressed.length > 0">
-              <tr v-for="score in entry.progressed" :key="score.level">
-                <td class="rank"><p>#{{ score.rank }}</p></td>
-                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a></td>
+                <td class="level">
+                  <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                </td>
                 <td class="score"><p>+{{ localize(score.score) }}</p></td>
               </tr>
             </table>
@@ -94,57 +91,50 @@ export default {
     try {
       const [leaderboard, err] = await fetchLeaderboard();
       this.err = err || [];
+      if (!leaderboard) return;
 
-      // Fetch packs from packs.json
-      const packsRes = await fetch("/data/packs.json");
-      if (packsRes.ok) {
-        this.packs = await packsRes.json();
-      } else {
-        console.warn("Failed to load packs.json");
-        this.packs = [];
-      }
+      // Normalization function to compare levels
+      const normalize = (str) => str.toLowerCase().replace(/[\s\-']/g, "");
 
-      // Normalize level names for comparison
-      const normalize = (str) => str.toLowerCase().replace(/\s|-/g, "");
-
-      // Apply pack bonuses
-      for (const player of leaderboard) {
-        const allDoneLevels = [
-          ...(player.completed || []),
-          ...(player.verified || []),
-        ].filter(l => l.link || l.verification);
-
-        const completedLevelNames = new Set(allDoneLevels.map(l => normalize(l.level)));
-
+      // Loop through each player and calculate pack bonuses
+      this.leaderboard = leaderboard.map((player) => {
+        let packBonuses = 0;
         player.completedPacks = [];
-        let bonusTotal = 0;
 
-        for (const pack of this.packs) {
-          const allCompleted = pack.levels.every(level =>
-            completedLevelNames.has(normalize(level))
-          );
+        this.packs.forEach((pack) => {
+          const normalizedPackLevels = pack.levels.map(normalize);
+          const completedLevels = player.completed.map((lvl) => normalize(lvl.level));
 
-          if (allCompleted) {
-            player.completedPacks.push(pack);
-            bonusTotal += pack.bonusPoints;
+          const completedPack = normalizedPackLevels.every((lvl) => completedLevels.includes(lvl));
+
+          if (completedPack) {
+            packBonuses += pack.bonusPoints;
+            player.completedPacks.push(pack.name);
           }
-        }
+        });
 
-        player.total = (player.total || 0) + bonusTotal;
-        player.packBonus = bonusTotal;
-      }
+        return {
+          ...player,
+          total: player.total + packBonuses,
+          packBonuses,
+        };
+      });
 
-      // Re-sort leaderboard after applying bonuses
-      this.leaderboard = leaderboard.sort((a, b) => b.total - a.total);
+      // Sort leaderboard by total points descending
+      this.leaderboard.sort((a, b) => b.total - a.total);
     } catch (e) {
-      console.error("Error loading leaderboard or packs:", e);
+      console.error("Error fetching leaderboard:", e);
       this.leaderboard = [];
-      this.err = ["Could not fetch leaderboard or packs"];
+      this.err = ["Could not fetch leaderboard"];
     } finally {
       this.loading = false;
     }
   },
   methods: {
     localize,
+    getPackPoints(packName) {
+      const pack = this.packs.find((p) => p.name === packName);
+      return pack ? pack.bonusPoints : 0;
+    },
   },
 };
