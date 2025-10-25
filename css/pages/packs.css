@@ -7,24 +7,14 @@ main.page-packs {
   flex-direction: column;
   align-items: center;
   padding: 60px 40px;
-  min-height: calc(100vh - 100px);
+  min-height: 100vh;
+  overflow: hidden; /* prevent page scroll */
   box-sizing: border-box;
   color: #f5f5f5;
-  background-color: #121212; /* darker background for contrast */
-  background-image: none;
+  background-color: #121212;
   transition: background-color 0.25s ease, color 0.25s ease;
-  line-height: 1.7;
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-}
-
-.page-packs-container::before,
-main.page-packs::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.05);
-  pointer-events: none;
-  z-index: 0;
+  line-height: 1.7;
 }
 
 /* ---------- Packs grid ---------- */
@@ -37,6 +27,7 @@ main.page-packs::before {
   gap: 36px;
   margin-top: 40px;
   z-index: 1;
+  overflow: hidden;
 }
 
 /* ---------- Pack card ---------- */
@@ -51,8 +42,35 @@ main.page-packs::before {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  max-height: 75vh; /* limit box height */
+  overflow-y: auto; /* enable internal scroll */
+  scroll-behavior: smooth;
 }
 
+/* ---------- Custom scrollbar ---------- */
+.pack::-webkit-scrollbar,
+.pack-card::-webkit-scrollbar {
+  width: 10px;
+}
+
+.pack::-webkit-scrollbar-track,
+.pack-card::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+.pack::-webkit-scrollbar-thumb,
+.pack-card::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
+}
+
+.pack::-webkit-scrollbar-thumb:hover,
+.pack-card::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* ---------- Hover & interaction ---------- */
 .pack:hover,
 .pack-card:hover {
   transform: translateY(-8px);
@@ -69,7 +87,6 @@ main.page-packs::before {
   font-weight: 700;
   color: #ffffff;
   text-align: center;
-  letter-spacing: 0.5px;
 }
 
 /* ---------- Level list ---------- */
@@ -80,6 +97,7 @@ main.page-packs::before {
   padding: 0;
   margin: 0;
   width: 100%;
+  flex: 1;
 }
 
 /* ---------- Level item ---------- */
@@ -103,7 +121,7 @@ main.page-packs::before {
   background: #2f2f2f;
 }
 
-/* ---------- Level name link ---------- */
+/* ---------- Level name ---------- */
 .pack-levels a,
 .level-name,
 .pack a {
@@ -120,10 +138,10 @@ main.page-packs::before {
 .pack-levels a:hover,
 .pack a:hover {
   text-decoration: underline;
-  color: #66b3ff; /* soft blue hover color */
+  color: #66b3ff;
 }
 
-/* ---------- Video / iframe ---------- */
+/* ---------- Video ---------- */
 .pack iframe,
 .pack-video,
 .pack-levels iframe,
@@ -137,17 +155,12 @@ main.page-packs::before {
   margin: 0 auto;
 }
 
-/* ---------- Spacing between packs ---------- */
-.pack,
-.pack-card {
-  margin-bottom: 30px;
-}
-
-/* ---------- Responsive tweaks ---------- */
+/* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .page-packs-container,
   main.page-packs {
     padding: 40px 20px;
+    overflow-y: auto; /* re-enable scroll on small screens */
   }
 
   .packs-wrapper,
@@ -156,31 +169,9 @@ main.page-packs::before {
     gap: 24px;
   }
 
-  .pack iframe,
-  .pack-video,
-  .pack-levels iframe {
-    max-width: 100%;
+  .pack,
+  .pack-card {
+    max-height: none;
+    overflow-y: visible;
   }
-}
-
-/* ---------- Dark mode (still cleaner) ---------- */
-.dark .page-packs-container,
-.page-packs-container.dark,
-.dark main.page-packs,
-main.page-packs.dark {
-  background-color: #121212;
-  color: #f5f5f5;
-}
-
-.dark .pack,
-.page-packs-container.dark .pack,
-.dark .pack-card,
-.page-packs-container.dark .pack-card {
-  background: #1e1e1e;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
-}
-
-.dark .pack:hover,
-.dark .pack-card:hover {
-  background: #2a2a2a;
 }
