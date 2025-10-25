@@ -1,95 +1,158 @@
-/* ---------- Page wrapper ---------- */
+/* ---------- Theme Colors ---------- */
+:root {
+  --color-background: white;
+  --color-on-background: black;
+  --color-background-hover: #eee;
+  --color-on-background-hover: black;
+  --color-primary: #DB830F;
+  --color-on-primary: white;
+  --color-error: #de0000;
+  --color-on-error: white;
+}
+
+main.dark,
+header.dark {
+  color-scheme: dark;
+  --color-background: #1c1b1f;
+  --color-on-background: white;
+  --color-background-hover: #27262c;
+  --color-on-background-hover: white;
+  --color-primary: #432805;
+  --color-primary-disabled: #A66819;
+  --color-on-primary: white;
+  --color-error: #de0000;
+  --color-on-error: white;
+}
+
+/* ---------- Global layout ---------- */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+header,
+main {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 2fr) minmax(16rem, 1fr);
+  column-gap: 2rem;
+}
+
+header {
+  display: flex;
+  padding-inline: calc(25vw - 10rem);
+  height: 4rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+@media screen and (min-width: 1366px) {
+  header {
+    display: grid;
+    padding-inline: 0;
+  }
+}
+
+header .logo {
+  justify-self: end;
+  align-self: center;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+header .nav {
+  flex: 1;
+}
+
+main {
+  height: 0;
+  flex: 1;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  column-gap: 2rem;
+}
+
+main > div {
+  overflow-y: auto;
+}
+
+/* ---------- Packs Page ---------- */
 .page-packs-container,
 main.page-packs {
   position: relative;
   z-index: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 60px 40px;
-  min-height: 100vh;
-  overflow: hidden; /* prevent page scroll */
   box-sizing: border-box;
-  color: #f5f5f5;
-  background-color: #121212;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
+  overflow-x: hidden;
+  overflow-y: visible;
+  min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* ---------- Packs grid ---------- */
+/* ---------- Packs Row ---------- */
 .packs-wrapper,
 .packs-container {
   width: 100%;
-  max-width: 1300px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 32px;
   margin-top: 40px;
   z-index: 1;
-  overflow: hidden;
 }
 
-/* ---------- Pack card ---------- */
+/* ---------- Pack Card ---------- */
 .pack,
 .pack-card {
-  background: #1e1e1e;
+  background: var(--color-background-hover);
   border-radius: 0.75rem;
   padding: 28px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
-  max-height: 75vh; /* limit box height */
-  overflow-y: auto; /* enable internal scroll */
-  scroll-behavior: smooth;
+  width: 360px;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
-/* ---------- Custom scrollbar ---------- */
-.pack::-webkit-scrollbar,
-.pack-card::-webkit-scrollbar {
-  width: 10px;
-}
-
-.pack::-webkit-scrollbar-track,
-.pack-card::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 10px;
-}
-
-.pack::-webkit-scrollbar-thumb,
-.pack-card::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 10px;
-}
-
-.pack::-webkit-scrollbar-thumb:hover,
-.pack-card::-webkit-scrollbar-thumb:hover {
-  background: #666;
-}
-
-/* ---------- Hover & interaction ---------- */
 .pack:hover,
 .pack-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
-  background: #2a2a2a;
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  background: var(--color-background-hover);
+  color: var(--color-on-background-hover);
 }
 
-/* ---------- Pack title ---------- */
+/* ---------- Pack Title ---------- */
 .pack > h2,
 .pack-card > h2,
 .pack-title {
   margin: 0 0 16px;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-on-background);
   text-align: center;
 }
 
-/* ---------- Level list ---------- */
+/* ---------- Levels List ---------- */
 .pack-levels,
 .level-list,
 .pack ul {
@@ -97,10 +160,9 @@ main.page-packs {
   padding: 0;
   margin: 0;
   width: 100%;
-  flex: 1;
 }
 
-/* ---------- Level item ---------- */
+/* ---------- Level Item ---------- */
 .pack-levels li,
 .level-item,
 .pack li {
@@ -108,9 +170,9 @@ main.page-packs {
   flex-direction: column;
   align-items: center;
   gap: 18px;
-  margin: 24px 0;
+  margin: 22px 0;
   width: 100%;
-  background: #242424;
+  background: var(--color-background);
   border-radius: 0.5rem;
   padding: 20px;
   transition: background 0.2s ease;
@@ -118,17 +180,17 @@ main.page-packs {
 
 .pack-levels li:hover,
 .level-item:hover {
-  background: #2f2f2f;
+  background: var(--color-background-hover);
 }
 
-/* ---------- Level name ---------- */
+/* ---------- Level Name ---------- */
 .pack-levels a,
 .level-name,
 .pack a {
   display: inline-block;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-on-background);
   text-decoration: none;
   text-align: center;
   word-break: break-word;
@@ -138,7 +200,7 @@ main.page-packs {
 .pack-levels a:hover,
 .pack a:hover {
   text-decoration: underline;
-  color: #66b3ff;
+  color: var(--color-primary);
 }
 
 /* ---------- Video ---------- */
@@ -147,31 +209,53 @@ main.page-packs {
 .pack-levels iframe,
 .level-video {
   width: 100%;
-  max-width: 800px;
+  max-width: 720px;
   aspect-ratio: 16 / 9;
   border-radius: 0.75rem;
   border: none;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
   margin: 0 auto;
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .pack,
+  .pack-card {
+    width: 320px;
+  }
+}
+
 @media (max-width: 900px) {
   .page-packs-container,
   main.page-packs {
+    align-items: center;
     padding: 40px 20px;
-    overflow-y: auto; /* re-enable scroll on small screens */
   }
 
   .packs-wrapper,
   .packs-container {
-    grid-template-columns: 1fr;
+    justify-content: center;
     gap: 24px;
   }
 
   .pack,
   .pack-card {
-    max-height: none;
-    overflow-y: visible;
+    width: 100%;
+    max-width: 420px;
   }
+}
+
+/* ---------- Utility Elements ---------- */
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: span 3;
+}
+
+input[type="checkbox"] {
+  height: 1.25rem;
+  width: 1.25rem;
+  cursor: pointer;
+  margin: 0;
 }
