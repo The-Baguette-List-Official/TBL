@@ -1,43 +1,22 @@
+import levels from '../../data/_list.json';
+
 export default {
-  name: "Packs",
+  name: "List",
   data() {
     return {
-      packs: [
-        {
-          name: "The Former Top 1's",
-          bonusPoints: 200,
-          levels: [
-            { file: "Colorblind", display: "Colorblind" },
-            { file: "Champions-Road", display: "Champion's Road" },
-            { file: "Bobsawamba", display: "Bobsawamba" },
-            { file: "My-Spike-is-Laggy", display: "My Spike is Laggy" }
-          ]
-        }
-      ],
+      levels: [],
       loading: true,
-      error: null
+      error: null,
     };
   },
 
   async mounted() {
     try {
-      for (const pack of this.packs) {
-        const fetchedLevels = [];
-        for (const lvl of pack.levels) {
-          const res = await fetch(`/data/${lvl.file}.json`);
-          if (!res.ok) continue;
-
-          const data = await res.json();
-          const ytUrl = data.verification?.[0] || null;
-          const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
-
-          fetchedLevels.push({
-            name: lvl.display,
-            embedUrl
-          });
-        }
-        pack.levels = fetchedLevels;
-      }
+      // Convert each level name to display format (replace dashes with spaces)
+      this.levels = levels.map((levelName, index) => ({
+        name: levelName.replace(/-/g, " "),
+        index,
+      }));
       this.loading = false;
     } catch (err) {
       this.error = err.message;
@@ -45,37 +24,19 @@ export default {
     }
   },
 
-  methods: {
-    convertToEmbed(url) {
-      if (!url) return null;
-      const ytMatch = url.match(
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
-      );
-      return ytMatch?.[1] ? `https://www.youtube.com/embed/${ytMatch[1]}` : null;
-    }
-  },
-
   template: `
-    <main v-if="loading" class="page-packs-container">
-      <p class="type-label-lg">Loading packs...</p>
+    <main v-if="loading" class="page-list-container">
+      <p class="type-label-lg">Loading list...</p>
     </main>
-    <main v-else class="page-packs-container">
-      <div v-for="pack in packs" class="pack">
-        <h2 class="pack-title">{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
-        <div class="pack-levels">
-          <div v-for="level in pack.levels" class="pack-level">
-            <h3 class="level-name">{{ level.name }}</h3>
-            <iframe
-              v-if="level.embedUrl"
-              class="level-video"
-              :src="level.embedUrl"
-              frameborder="0"
-              allowfullscreen
-            ></iframe>
-            <p v-else class="no-video">No verification video found</p>
-          </div>
+
+    <main v-else class="page-list-container">
+      <div class="list-container">
+        <div v-for="level in levels" class="level">
+          <button class="level-btn">
+            <span class="level-name">{{ level.name }}</span>
+          </button>
         </div>
       </div>
     </main>
-  `
+  `,
 };
