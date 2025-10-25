@@ -3,7 +3,7 @@ export default {
   data() {
     return {
       packs: [],
-      levelData: {}, // Stores verification/completed info for leaderboard
+      levelData: {}, // For leaderboard bonus calculation
       loading: true,
       error: null,
     };
@@ -11,38 +11,40 @@ export default {
 
   async mounted() {
     try {
-      // 1. Fetch packs.json
-      const packsRes = await fetch('/data/packs.json');
-      if (!packsRes.ok) throw new Error('Failed to fetch packs.json');
-      const packsList = await packsRes.json();
+      const res = await fetch("/data/packs.json");
+      if (!res.ok) throw new Error("Failed to fetch packs.json");
+      const packsList = await res.json();
 
-      // 2. Fetch levels for each pack
       for (const pack of packsList) {
         const fetchedLevels = [];
 
         for (const levelName of pack.levels) {
+          // Convert level name to file name: spaces → dashes
           const fileName = levelName.replace(/ /g, "-");
           const levelPath = `/data/${fileName}.json`;
 
           try {
-            const res = await fetch(levelPath);
-            if (!res.ok) throw new Error(`Failed to fetch ${levelPath}`);
-            const data = await res.json();
+            const levelRes = await fetch(levelPath);
+            if (!levelRes.ok) throw new Error(`Failed to fetch ${levelPath}`);
+            const data = await levelRes.json();
 
-            // Store verification/completion info
+            // Store verification/completed links
             this.levelData[levelName] = {
               verification: data.verification || [],
               link: data.link || [],
             };
 
+            // Convert first completed link to YouTube embed
             const ytUrl = Array.isArray(data.link) ? data.link[0] : data.link;
             const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
 
-            const displayName = levelName.replace(/-/g, " ");
-            fetchedLevels.push({ name: displayName, embedUrl });
+            fetchedLevels.push({
+              name: levelName, // keep original with spaces/apostrophes
+              embedUrl,
+            });
           } catch (err) {
-            console.warn(`Could not load level ${levelName}:`, err);
-            fetchedLevels.push({ name: levelName.replace(/-/g, " "), embedUrl: null });
+            console.warn("Could not load level", levelName, err);
+            fetchedLevels.push({ name: levelName, embedUrl: null });
           }
         }
 
@@ -52,6 +54,7 @@ export default {
       this.packs = packsList;
       this.loading = false;
     } catch (err) {
+      console.error(err);
       this.error = err.message;
       this.loading = false;
     }
