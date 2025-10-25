@@ -73,11 +73,12 @@ export default {
   },
 
   template: `
-    <main v-if="loading" class="page-packs-container">
-      <p class="type-label-lg">Loading packs...</p>
-    </main>
+  <main v-if="loading" class="page-packs-container">
+    <p class="type-label-lg">Loading packs...</p>
+  </main>
 
-    <main v-else class="page-packs-container">
+  <main v-else class="page-packs-container">
+    <div class="packs-wrapper">
       <div v-for="pack in packs" class="pack">
         <h2 class="pack-title">{{ pack.name }} (+{{ pack.bonusPoints }} pts)</h2>
         <div class="pack-levels">
@@ -94,6 +95,7 @@ export default {
           </div>
         </div>
       </div>
-    </main>
-  `,
+    </div>
+  </main>
+`,
 };
