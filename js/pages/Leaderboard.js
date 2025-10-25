@@ -91,46 +91,53 @@ export default {
       return this.leaderboard[this.selected];
     },
   },
-  async mounted() {
-    try {
-      const [leaderboard, err] = await fetchLeaderboard();
-      this.leaderboard = leaderboard || [];
-      this.err = err || [];
+async mounted() {
+  try {
+    // Fetch leaderboard as usual
+    const [leaderboard, err] = await fetchLeaderboard();
+    this.leaderboard = leaderboard || [];
+    this.err = err || [];
 
-      const packsComponent = this.$root.$refs.packsComponent;
-      if (packsComponent && packsComponent.packs && packsComponent.levelData) {
-        this.leaderboard = this.leaderboard.map(player => {
-          let totalBonus = 0;
+    // Fetch packs.json
+    const res = await fetch("/data/packs.json");
+    const packs = await res.json();
 
-          packsComponent.packs.forEach(pack => {
-            // Extract original level names from objects
-            const levelNames = pack.levels.map(l => l.name.replace(/\s+/g, "-"));
+    // Fetch each level JSON to find verified users
+    for (const pack of packs) {
+      const completedBy = new Set();
 
-            const completedAll = levelNames.every(levelName => {
-              const levelData = packsComponent.levelData[levelName];
-              if (!levelData || !levelData.verification) return false;
-              return levelData.verification.includes(player.user);
-            });
+      for (const levelName of pack.levels) {
+        const levelPath = `/data/${levelName}.json`;
+        const levelRes = await fetch(levelPath);
+        if (!levelRes.ok) continue;
 
-            if (completedAll) totalBonus += pack.bonusPoints;
-          });
+        const levelData = await levelRes.json();
 
-          return {
-            ...player,
-            total: player.total + totalBonus,
-            packBonuses: totalBonus,
-          };
-        });
+        if (levelData && levelData.records) {
+          // Check who completed (100%) the level
+          levelData.records
+            .filter((r) => r.percent === 100)
+            .forEach((r) => completedBy.add(r.user));
+        }
       }
 
-    } catch (e) {
-      console.error("Error fetching leaderboard:", e);
-      this.leaderboard = [];
-      this.err = ["Could not fetch leaderboard"];
-    } finally {
-      this.loading = false;
+      // Apply bonus points to players who completed all levels in the pack
+      this.leaderboard = this.leaderboard.map((player) => {
+        if ([...completedBy].includes(player.user)) {
+          player.total += pack.bonusPoints;
+          player.packBonus = (player.packBonus || 0) + pack.bonusPoints;
+        }
+        return player;
+      });
     }
-  },
+  } catch (e) {
+    console.error("Error fetching leaderboard or packs:", e);
+    this.leaderboard = [];
+    this.err = ["Could not fetch leaderboard or packs"];
+  } finally {
+    this.loading = false;
+  }
+},
   methods: {
     localize,
   },
