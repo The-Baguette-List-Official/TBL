@@ -1,7 +1,6 @@
 import { fetchLeaderboard } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
-import packs from '../data/packs.json'; // make sure this path is correct
 
 export default {
   components: { Spinner },
@@ -10,7 +9,14 @@ export default {
     loading: true,
     selected: 0,
     err: [],
-    packs: packs || [],
+    packs: [
+      {
+        name: "The Former Top 1's",
+        bonusPoints: 200,
+        levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"]
+      },
+      // Add more packs here if needed
+    ],
   }),
   template: `
     <main v-if="loading">
@@ -56,8 +62,8 @@ export default {
               </table>
             </div>
 
-            <h2 v-if="entry.verified.length > 0">Verified Levels ({{ entry.verified.length }})</h2>
-            <table class="table" v-if="entry.verified.length > 0">
+            <h2 v-if="entry.verified && entry.verified.length > 0">Verified Levels ({{ entry.verified.length }})</h2>
+            <table class="table" v-if="entry.verified && entry.verified.length > 0">
               <tr v-for="score in entry.verified" :key="score.level">
                 <td class="rank"><p>#{{ score.rank }}</p></td>
                 <td class="level">
@@ -67,8 +73,8 @@ export default {
               </tr>
             </table>
 
-            <h2 v-if="entry.completed.length > 0">Completed Levels ({{ entry.completed.length }})</h2>
-            <table class="table" v-if="entry.completed.length > 0">
+            <h2 v-if="entry.completed && entry.completed.length > 0">Completed Levels ({{ entry.completed.length }})</h2>
+            <table class="table" v-if="entry.completed && entry.completed.length > 0">
               <tr v-for="score in entry.completed" :key="score.level">
                 <td class="rank"><p>#{{ score.rank }}</p></td>
                 <td class="level">
@@ -93,37 +99,43 @@ export default {
       this.err = err || [];
       if (!leaderboard) return;
 
-      // Normalization function to compare levels
+      // Helper: normalize names (lowercase, remove spaces/dashes/apostrophes)
       const normalize = (str) => str.toLowerCase().replace(/[\s\-']/g, "");
 
-      // Loop through each player and calculate pack bonuses
+      // Process each player for pack completion
       this.leaderboard = leaderboard.map((player) => {
+        const verified = player.verified || [];
+        const completed = player.completed || [];
+
         let packBonuses = 0;
-        player.completedPacks = [];
+        const completedPacks = [];
 
         this.packs.forEach((pack) => {
           const normalizedPackLevels = pack.levels.map(normalize);
-          const completedLevels = player.completed.map((lvl) => normalize(lvl.level));
+          const playerCompletedLevels = completed.map((lvl) => normalize(lvl.level));
 
-          const completedPack = normalizedPackLevels.every((lvl) => completedLevels.includes(lvl));
-
-          if (completedPack) {
+          const finishedPack = normalizedPackLevels.every((lvl) => playerCompletedLevels.includes(lvl));
+          if (finishedPack) {
             packBonuses += pack.bonusPoints;
-            player.completedPacks.push(pack.name);
+            completedPacks.push(pack.name);
           }
         });
 
         return {
           ...player,
-          total: player.total + packBonuses,
+          verified,
+          completed,
+          total: (player.total || 0) + packBonuses,
           packBonuses,
+          completedPacks,
         };
       });
 
-      // Sort leaderboard by total points descending
+      // Sort descending by total points
       this.leaderboard.sort((a, b) => b.total - a.total);
+
     } catch (e) {
-      console.error("Error fetching leaderboard:", e);
+      console.error("Leaderboard error:", e);
       this.leaderboard = [];
       this.err = ["Could not fetch leaderboard"];
     } finally {
