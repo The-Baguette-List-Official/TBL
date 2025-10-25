@@ -9,7 +9,7 @@ export default {
           levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"],
         },
       ],
-      levelData: {}, // Will be populated with verification arrays
+      levelData: {},
       loading: true,
       error: null,
     };
@@ -17,7 +17,6 @@ export default {
 
   async mounted() {
     try {
-      // Fetch level JSON files and populate levelData
       for (const pack of this.packs) {
         const fetchedLevels = [];
 
@@ -30,13 +29,17 @@ export default {
 
             const data = await res.json();
 
-            // Store verification array in levelData for leaderboard use
-            this.levelData[levelName] = {
-              verification: data.verification || [],
-            };
+            // Ensure verification is treated as an array
+            const verifications = Array.isArray(data.verification)
+              ? data.verification
+              : data.verification
+              ? [data.verification]
+              : [];
 
-            // Convert verification to YouTube embed URL
-            const ytUrl = data.verification ? data.verification[0] : null; // optional: first verification link
+            this.levelData[levelName] = { verification: verifications };
+
+            // Use first verification link if available
+            const ytUrl = verifications.length > 0 ? verifications[0] : null;
             const embedUrl = ytUrl ? this.convertToEmbed(ytUrl) : null;
 
             // Convert dashes to spaces for display
@@ -47,7 +50,7 @@ export default {
               embedUrl,
             });
           } catch (err) {
-            console.warn(`Failed to load ${levelName}.json`);
+            console.warn(`Failed to load ${levelName}.json`, err);
           }
         }
 
@@ -62,14 +65,12 @@ export default {
   },
 
   methods: {
-    // Converts full YouTube URLs to embed format
     convertToEmbed(url) {
       if (!url) return null;
 
-      const ytMatch =
-        url.match(
-          /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
-        );
+      const ytMatch = url.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
+      );
 
       if (ytMatch && ytMatch[1]) {
         return `https://www.youtube.com/embed/${ytMatch[1]}`;
