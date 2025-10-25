@@ -8,6 +8,10 @@ export default {
           bonusPoints: 200,
           levels: ["Colorblind", "Champions-Road", "Bobsawamba", "My-Spike-is-Laggy"],
         },
+        {
+          name: "TBL Favorites I",
+          bonusPoints: 75,
+          levels: ["LgTn", "Fleur-de-lotus", "Arc-en-ciel", "Skill-control", "Croissant"],
       ],
       loading: true,
       error: null,
