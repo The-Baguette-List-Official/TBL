@@ -60,7 +60,7 @@ export default {
   },
   methods: { localize },
   template: `
-    <main v-if="loading"><Spinner></Spinner></main>
+    <main v-if="loading"><Spinner /></main>
     <main v-else class="page-leaderboard-container">
       <div class="page-leaderboard">
         <table class="board">
@@ -71,8 +71,20 @@ export default {
           </tr>
         </table>
 
-        <div v-if="entry">
-          <h1>{{ entry.user }} - Total: {{ localize(entry.total) }}</h1>
+        <div v-if="entry" class="player-profile">
+          <h1 class="player-name">{{ entry.user }} - Total: {{ localize(entry.total) }}</h1>
+
+          <div v-if="entry.verified.length || entry.completed.length">
+            <h2>Levels Completed / Verified</h2>
+            <ul>
+              <li v-for="lvl in entry.verified" :key="lvl">
+                {{ lvl }} (Verified)
+              </li>
+              <li v-for="lvl in entry.completed" :key="lvl">
+                {{ lvl }} (Completed)
+              </li>
+            </ul>
+          </div>
 
           <div v-if="entry.completedPacks.length">
             <h2>Completed Packs</h2>
