@@ -93,7 +93,7 @@ main.page-packs {
   display: flex;
   flex-direction: column;
   align-items: center; /* center horizontally */
-  padding: 10px 40px; /* reduced from 60px to start higher */
+  padding: 2px 40px; /* reduced from 60px to start higher */
   box-sizing: border-box;
   background-color: var(--color-background);
   color: var(--color-on-background);
