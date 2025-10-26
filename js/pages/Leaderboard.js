@@ -1,6 +1,7 @@
 import { fetchLeaderboard } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
+import * as packsModule from '../packs.js';
 
 export default {
   components: {
@@ -31,7 +32,10 @@ export default {
                 <p class="type-label-lg">#{{ i + 1 }}</p>
               </td>
               <td class="total">
-                <p class="type-label-lg">{{ localize(ientry.total) }}<span v-if="ientry.packBonuses"> (+{{ ientry.packBonuses }})</span></p>
+                <p class="type-label-lg">
+                  {{ localize(ientry.total) }}
+                  <span v-if="ientry.packBonuses && Number(ientry.packBonuses) > 0" class="pack-bonus">(+{{ localize(ientry.packBonuses) }})</span>
+                </p>
               </td>
               <td class="user" :class="{ 'active': selected == i }">
                 <button @click="selected = i">
@@ -45,7 +49,8 @@ export default {
         <div class="player-container">
           <div class="player" v-if="entry">
             <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
-            <h3>{{ entry.total }}</h3>
+            <h3>{{ localize(entry.total) }}</h3>
+            <p v-if="entry.packBonuses && Number(entry.packBonuses) > 0" class="type-label-sm pack-bonus">Pack bonus: +{{ localize(entry.packBonuses) }}</p>
 
             <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length }})</h2>
             <table class="table" v-if="entry.verified.length > 0">
@@ -97,9 +102,23 @@ export default {
       this.leaderboard = leaderboard || [];
       this.err = err || [];
 
-      // If packs component is available, add pack bonus points for players who completed all levels in a pack.
-      const packsComponent = this.$root.$refs.packsComponent;
+      // Prefer packs component on the root if available, otherwise fall back to the repository's packs export.
+      const packsComponent = this.$root && this.$root.$refs && this.$root.$refs.packsComponent;
+      let packsSource = null;
+
       if (packsComponent && packsComponent.packs && packsComponent.levelData) {
+        packsSource = { packs: packsComponent.packs, levelData: packsComponent.levelData };
+      } else if (packsModule) {
+        // Try to handle both named exports and default export shapes
+        const candidate = packsModule.packs ? packsModule : (packsModule.default ? packsModule.default : null);
+        if (candidate && candidate.packs && candidate.levelData) {
+          packsSource = { packs: candidate.packs, levelData: candidate.levelData };
+        }
+      }
+
+      if (packsSource) {
+        const { packs, levelData } = packsSource;
+
         // Helper to slugify a level name to the common key forms used by levelData
         const slugify = (s) =>
           String(s || '')
@@ -109,20 +128,15 @@ export default {
             .toLowerCase();
 
         const findLevelData = (raw) => {
-          // Try multiple variations so we match the keys present in levelData:
-          //  - raw as-is
-          //  - slugified
-          //  - lower slug
           const attempts = [];
           if (typeof raw === 'string') attempts.push(raw);
           if (raw && raw.name) attempts.push(raw.name);
-          // slug forms
           attempts.push(slugify(raw));
-          // also try raw with spaces replaced by dashes (preserving case) for backward compatibility
           if (typeof raw === 'string') attempts.push(raw.replace(/\s+/g, '-'));
+          // also try direct keys from levelData object
           for (const key of attempts) {
             if (!key) continue;
-            if (packsComponent.levelData[key]) return packsComponent.levelData[key];
+            if (levelData[key]) return levelData[key];
           }
           // nothing found
           return undefined;
@@ -134,19 +148,19 @@ export default {
         this.leaderboard = this.leaderboard.map(player => {
           let totalBonus = 0;
 
-          packsComponent.packs.forEach(pack => {
+          (Array.isArray(packs) ? packs : []).forEach(pack => {
             const bonus = Number(pack.bonusPoints || 0);
 
             // pack.levels might be array of strings or objects
             const levels = Array.isArray(pack.levels) ? pack.levels : [];
 
-            const completedAll = levels.every(levelEntry => {
-              const levelData = findLevelData(levelEntry);
-              if (!levelData || !levelData.verification) return false;
+            const completedAll = levels.length > 0 && levels.every(levelEntry => {
+              const levelDatum = findLevelData(levelEntry);
+              if (!levelDatum || !levelDatum.verification) return false;
 
               // verification is assumed to be an array of usernames (strings).
               // Normalize them when checking to be case-insensitive.
-              const verifiedUsers = (levelData.verification || []).map(u => String(u).toLowerCase());
+              const verifiedUsers = (levelDatum.verification || []).map(u => String(u).toLowerCase());
               return verifiedUsers.includes(player._normUser);
             });
 
