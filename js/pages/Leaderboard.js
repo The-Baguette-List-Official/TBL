@@ -97,30 +97,72 @@ export default {
       this.leaderboard = leaderboard || [];
       this.err = err || [];
 
+      // If packs component is available, add pack bonus points for players who completed all levels in a pack.
       const packsComponent = this.$root.$refs.packsComponent;
       if (packsComponent && packsComponent.packs && packsComponent.levelData) {
+        // Helper to slugify a level name to the common key forms used by levelData
+        const slugify = (s) =>
+          String(s || '')
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-zA-Z0-9\-]/g, '')
+            .toLowerCase();
+
+        const findLevelData = (raw) => {
+          // Try multiple variations so we match the keys present in levelData:
+          //  - raw as-is
+          //  - slugified
+          //  - lower slug
+          const attempts = [];
+          if (typeof raw === 'string') attempts.push(raw);
+          if (raw && raw.name) attempts.push(raw.name);
+          // slug forms
+          attempts.push(slugify(raw));
+          // also try raw with spaces replaced by dashes (preserving case) for backward compatibility
+          if (typeof raw === 'string') attempts.push(raw.replace(/\s+/g, '-'));
+          for (const key of attempts) {
+            if (!key) continue;
+            if (packsComponent.levelData[key]) return packsComponent.levelData[key];
+          }
+          // nothing found
+          return undefined;
+        };
+
+        // Normalize leaderboard usernames to lowercase for reliable comparison, but keep original user string for display.
+        this.leaderboard = this.leaderboard.map(player => ({ ...player, _normUser: String(player.user || '').toLowerCase() }));
+
         this.leaderboard = this.leaderboard.map(player => {
           let totalBonus = 0;
 
           packsComponent.packs.forEach(pack => {
-            // Extract original level names from objects
-            const levelNames = pack.levels.map(l => l.name.replace(/\s+/g, "-"));
+            const bonus = Number(pack.bonusPoints || 0);
 
-            const completedAll = levelNames.every(levelName => {
-              const levelData = packsComponent.levelData[levelName];
+            // pack.levels might be array of strings or objects
+            const levels = Array.isArray(pack.levels) ? pack.levels : [];
+
+            const completedAll = levels.every(levelEntry => {
+              const levelData = findLevelData(levelEntry);
               if (!levelData || !levelData.verification) return false;
-              return levelData.verification.includes(player.user);
+
+              // verification is assumed to be an array of usernames (strings).
+              // Normalize them when checking to be case-insensitive.
+              const verifiedUsers = (levelData.verification || []).map(u => String(u).toLowerCase());
+              return verifiedUsers.includes(player._normUser);
             });
 
-            if (completedAll) totalBonus += pack.bonusPoints;
+            if (completedAll && bonus) totalBonus += bonus;
           });
 
           return {
             ...player,
-            total: player.total + totalBonus,
+            total: (Number(player.total) || 0) + totalBonus,
             packBonuses: totalBonus,
           };
         });
+
+        // Remove temporary normalization property and sort leaderboard by total descending
+        this.leaderboard.sort((a, b) => (b.total || 0) - (a.total || 0));
+        this.leaderboard = this.leaderboard.map(({ _normUser, ...rest }) => rest);
       }
 
     } catch (e) {
