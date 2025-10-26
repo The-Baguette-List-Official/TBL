@@ -12,6 +12,11 @@ export default {
           name: "TBL Favorites I",
           bonusPoints: 75,
           levels: ["LgTn", "Fleur-de-lotus", "ARC-EN-CIEL", "Skill-Control", "Frozen-Spike"],
+        },
+        {
+          name: "The Floral Fury Trilogy",
+          bonusPoints: 75,
+          levels: ["Champions-Road", "The-Moonlit-Pinnacle", "Fleur-de-lotus"],
         }
       ],
       loading: true,
