@@ -28,7 +28,7 @@ header.dark {
 html,
 body {
   height: 100%;
-  overflow: hidden; /* Prevent full-page scrolling */
+  overflow: hidden; /* ✅ Prevent full-page scrolling */
 }
 
 body {
@@ -92,30 +92,33 @@ main.page-packs {
   z-index: 0;
   display: flex;
   flex-direction: column;
-  align-items: center; /* center horizontally */
-  padding: 10px 40px; /* reduced from 60px to start higher */
+  align-items: flex-start; /* ✅ start instead of center for horizontal layout */
+  padding: 40px 40px; /* slightly higher */
   box-sizing: border-box;
   background-color: var(--color-background);
   color: var(--color-on-background);
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
-  overflow-x: hidden;
-  overflow-y: auto; /* Only packs can scroll vertically */
-  height: 100%; /* ensure it fills available space */
+  overflow-x: auto; /* ✅ horizontal scroll enabled */
+  overflow-y: hidden; /* disable vertical scroll inside packs container */
+  height: 100%;
+  width: 100%;
   transition: background-color 0.25s ease, color 0.25s ease;
+  scroll-behavior: smooth; /* smooth horizontal scrolling */
 }
 
 /* ---------- Packs Row ---------- */
 .packs-wrapper,
 .packs-container {
-  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* center packs horizontally */
+  flex-wrap: nowrap; /* ✅ prevent wrapping to next row */
+  justify-content: flex-start; /* align to start */
   align-items: flex-start;
   gap: 32px;
   margin-top: 40px;
   z-index: 1;
+  width: max-content; /* ✅ ensures horizontal scrolling works */
+  padding-bottom: 20px; /* room for scrollbar */
 }
 
 /* ---------- Pack Card ---------- */
@@ -131,6 +134,7 @@ main.page-packs {
   align-items: center;
   width: 360px;
   box-sizing: border-box;
+  flex-shrink: 0; /* ✅ prevent packs from shrinking when too many */
   overflow: visible;
 }
 
@@ -229,20 +233,18 @@ main.page-packs {
 @media (max-width: 900px) {
   .page-packs-container,
   main.page-packs {
-    align-items: center;
-    padding: 30px 20px; /* also reduced top padding for mobile */
+    align-items: flex-start;
+    padding: 30px 20px;
   }
 
   .packs-wrapper,
   .packs-container {
-    justify-content: center;
     gap: 24px;
   }
 
   .pack,
   .pack-card {
-    width: 100%;
-    max-width: 420px;
+    width: 300px;
   }
 }
 
