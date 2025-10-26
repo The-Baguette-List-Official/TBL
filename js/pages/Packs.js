@@ -15,7 +15,7 @@ export default {
         },
         {
           name: "The Floral Fury Trilogy",
-          bonusPoints: 75,
+          bonusPoints: 100,
           levels: ["Champions-Road", "The-Moonlit-Pinnacle", "Fleur-de-lotus"],
         }
       ],
