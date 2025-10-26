@@ -28,7 +28,7 @@ header.dark {
 html,
 body {
   height: 100%;
-  overflow: hidden; /* ✅ Prevent full-page scrolling */
+  overflow: hidden; /* Prevent full-page scrolling */
 }
 
 body {
@@ -93,14 +93,14 @@ main.page-packs {
   display: flex;
   flex-direction: column;
   align-items: center; /* center horizontally */
-  padding: 60px 40px;
+  padding: 40px 40px; /* reduced from 60px to start higher */
   box-sizing: border-box;
   background-color: var(--color-background);
   color: var(--color-on-background);
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
   overflow-x: hidden;
-  overflow-y: auto; /* ✅ Only packs can scroll vertically */
+  overflow-y: auto; /* Only packs can scroll vertically */
   height: 100%; /* ensure it fills available space */
   transition: background-color 0.25s ease, color 0.25s ease;
 }
@@ -230,7 +230,7 @@ main.page-packs {
   .page-packs-container,
   main.page-packs {
     align-items: center;
-    padding: 40px 20px;
+    padding: 30px 20px; /* also reduced top padding for mobile */
   }
 
   .packs-wrapper,
