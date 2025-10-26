@@ -1,8 +1,33 @@
+/* ---------- Theme Colors ---------- */
+:root {
+  --color-background: white;
+  --color-on-background: black;
+  --color-background-hover: #eee;
+  --color-on-background-hover: black;
+  --color-primary: #DB830F;
+  --color-on-primary: white;
+  --color-error: #de0000;
+  --color-on-error: white;
+}
+
+main.dark,
+header.dark {
+  color-scheme: dark;
+  --color-background: #1c1b1f;
+  --color-on-background: white;
+  --color-background-hover: #27262c;
+  --color-on-background-hover: white;
+  --color-primary: #432805;
+  --color-primary-disabled: #A66819;
+  --color-on-primary: white;
+  --color-error: #de0000;
+  --color-on-error: white;
+}
+
 /* ---------- Global layout ---------- */
 html,
 body {
   height: 100%;
-  overflow: hidden; /* ❌ prevent scrolling on full site */
 }
 
 body {
@@ -11,12 +36,52 @@ body {
   margin: 0;
 }
 
+header,
 main {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 2fr) minmax(16rem, 1fr);
+  column-gap: 2rem;
+}
+
+header {
+  display: flex;
+  padding-inline: calc(25vw - 10rem);
+  height: 4rem;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+@media screen and (min-width: 1366px) {
+  header {
+    display: grid;
+    padding-inline: 0;
+  }
+}
+
+header .logo {
+  justify-self: end;
+  align-self: center;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+header .nav {
+  flex: 1;
+}
+
+main {
+  height: 0;
   flex: 1;
   display: grid;
   grid-template-rows: minmax(0, 1fr);
   column-gap: 2rem;
-  overflow: hidden; /* no scroll on main itself */
+}
+
+main > div {
+  overflow-y: auto;
 }
 
 /* ---------- Packs Page ---------- */
@@ -26,33 +91,171 @@ main.page-packs {
   z-index: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* center horizontally */
   padding: 60px 40px;
   box-sizing: border-box;
   background-color: var(--color-background);
   color: var(--color-on-background);
   font-family: "Inter", "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
-  overflow: hidden; /* prevent this container from scrolling */
-  height: 100%; /* take full main height */
+  overflow-x: hidden;
+  overflow-y: visible;
+  min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* ---------- Packs Scrollable Area ---------- */
+/* ---------- Packs Row ---------- */
 .packs-wrapper,
 .packs-container {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center; /* center packs horizontally */
   align-items: flex-start;
   gap: 32px;
   margin-top: 40px;
   z-index: 1;
+}
 
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1;
-  max-height: 100%;
-  padding-right: 12px; /* add space for scrollbar */
+/* ---------- Pack Card ---------- */
+.pack,
+.pack-card {
+  background: var(--color-background-hover);
+  border-radius: 0.75rem;
+  padding: 28px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 360px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.pack:hover,
+.pack-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  background: var(--color-background-hover);
+  color: var(--color-on-background-hover);
+}
+
+/* ---------- Pack Title ---------- */
+.pack > h2,
+.pack-card > h2,
+.pack-title {
+  margin: 0 0 16px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-on-background);
+  text-align: center;
+}
+
+/* ---------- Levels List ---------- */
+.pack-levels,
+.level-list,
+.pack ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* ---------- Level Item ---------- */
+.pack-levels li,
+.level-item,
+.pack li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin: 22px 0;
+  width: 100%;
+  background: var(--color-background);
+  border-radius: 0.5rem;
+  padding: 20px;
+  transition: background 0.2s ease;
+}
+
+.pack-levels li:hover,
+.level-item:hover {
+  background: var(--color-background-hover);
+}
+
+/* ---------- Level Name ---------- */
+.pack-levels a,
+.level-name,
+.pack a {
+  display: inline-block;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-on-background);
+  text-decoration: none;
+  text-align: center;
+  word-break: break-word;
+  transition: color 0.2s ease;
+}
+
+.pack-levels a:hover,
+.pack a:hover {
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+
+/* ---------- Video ---------- */
+.pack iframe,
+.pack-video,
+.pack-levels iframe,
+.level-video {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  margin: 0 auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .pack,
+  .pack-card {
+    width: 320px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page-packs-container,
+  main.page-packs {
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  .packs-wrapper,
+  .packs-container {
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .pack,
+  .pack-card {
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+/* ---------- Utility Elements ---------- */
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: span 3;
+}
+
+input[type="checkbox"] {
+  height: 1.25rem;
+  width: 1.25rem;
+  cursor: pointer;
+  margin: 0;
 }
