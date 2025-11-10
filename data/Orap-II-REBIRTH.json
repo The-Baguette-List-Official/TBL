@@ -9,5 +9,11 @@
     "verification": "https://youtu.be/YNweRJavXTY",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+    "user": "adammat",
+    "link": "https://youtu.be/yXugf0WCY24",
+    "percent": 100
+}
+    ]
 }
