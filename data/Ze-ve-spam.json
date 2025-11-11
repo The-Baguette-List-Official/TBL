@@ -9,5 +9,11 @@
     "verification": "https://www.youtube.com/watch?v=oSlWcBPwVc4",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+    "user": "Meiky",
+    "link": "https://youtu.be/Q5NwTDm8bI8",
+    "percent": 100
+}
+    ]
 }
