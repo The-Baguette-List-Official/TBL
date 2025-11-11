@@ -9,5 +9,11 @@
     "verification": "https://youtu.be/uBVmHnue_OQ?si=JcQACR8lwXlGIZIq&t=65",
     "percentToQualify": "100",
     "password": "Free To Copy",
-    "records": []
+    "records": [
+        {
+    "user": "liam",
+    "link": "https://www.youtube.com/watch?v=t1mc1Z2cLGQ",
+    "percent": 100
+}
+    ]
 }
